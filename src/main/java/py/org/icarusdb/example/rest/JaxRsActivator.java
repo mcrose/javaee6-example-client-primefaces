@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.pti.example.rest;
+package py.org.icarusdb.example.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

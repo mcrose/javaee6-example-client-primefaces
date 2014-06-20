@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.pti.example.test;
+package py.org.icarusdb.example.test;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -24,9 +24,11 @@ import javax.inject.Inject;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import py.org.pti.example.model.Member;
-import py.org.pti.example.service.MemberRegistration;
-import py.org.pti.example.util.Resources;
+
+import py.org.icarusdb.example.model.Member;
+import py.org.icarusdb.example.service.MemberRegistration;
+import py.org.icarusdb.example.util.Resources;
+
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;

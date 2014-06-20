@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.pti.example.data;
+package py.org.icarusdb.example.data;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,9 +22,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 
-import py.org.pti.example.model.Member;
+import py.org.icarusdb.example.model.Member;
 
 @ApplicationScoped
 public class MemberRepository {

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.pti.example.rest;
+package py.org.icarusdb.example.rest;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,9 +40,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import py.org.pti.example.data.MemberRepository;
-import py.org.pti.example.model.Member;
-import py.org.pti.example.service.MemberRegistration;
+import py.org.icarusdb.example.data.MemberRepository;
+import py.org.icarusdb.example.model.Member;
+import py.org.icarusdb.example.service.MemberRegistration;
 
 /**
  * JAX-RS Example
