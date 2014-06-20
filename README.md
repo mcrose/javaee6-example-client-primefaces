@@ -1,9 +1,11 @@
 Java EE 6 client-side example project
 =====================================
+Intented to query Java EE 6 server-side example project https://github.com/mcrose/javaee6-example-server
 
-Intented to query Java EE 6 server-side example project
-https://github.com/mcrose/javaee6-example-server
+....(configurations document to add)
 
+This is the pre-generated JBoss documentation
+---------------------------------------------
 
 Assortment of technologies including Arquillian
 Author: Pete Muir
