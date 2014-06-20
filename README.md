@@ -1,4 +1,10 @@
-example: Assortment of technologies including Arquillian
+Java EE 6 client-side example project
+
+Intented to query Java EE 6 server-side example project
+https://github.com/mcrose/javaee6-example-server
+
+
+PD: Assortment of technologies including Arquillian
 ========================
 Author: Pete Muir
 Level: Intermediate
