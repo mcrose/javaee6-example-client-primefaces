@@ -15,11 +15,11 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
+import py.org.icarusdb.commons.exception.ActiveUserException;
+import py.org.icarusdb.commons.exception.ConfigException;
+import py.org.icarusdb.commons.exception.LoginFailedException;
+import py.org.icarusdb.commons.exception.RegisteredUserException;
 import py.org.icarusdb.example.model.Continent;
-import py.org.icarusdb.exepction.ActiveUserException;
-import py.org.icarusdb.exepction.ConfigException;
-import py.org.icarusdb.exepction.LoginFailedException;
-import py.org.icarusdb.exepction.RegisteredUserException;
 
 /**
  * @author rgamarra

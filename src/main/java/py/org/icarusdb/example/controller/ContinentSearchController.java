@@ -19,10 +19,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import org.jboss.logging.Logger;
 import org.primefaces.event.CloseEvent;
 
+import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.example.model.Continent;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
 import py.org.icarusdb.example.util.AppHelper;
-import py.org.icarusdb.util.IDBProperties;
 import py.org.icarusdb.util.MessageUtil;
 
 /**

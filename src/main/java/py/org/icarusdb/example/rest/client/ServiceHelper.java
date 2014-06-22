@@ -13,12 +13,12 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 
-import py.org.icarusdb.exepction.ActiveUserException;
-import py.org.icarusdb.exepction.ConfigException;
-import py.org.icarusdb.exepction.LoginFailedException;
-import py.org.icarusdb.exepction.RegisteredUserException;
-import py.org.icarusdb.util.GlobalParameters;
-import py.org.icarusdb.util.UriBuilder;
+import py.org.icarusdb.commons.exception.ActiveUserException;
+import py.org.icarusdb.commons.exception.ConfigException;
+import py.org.icarusdb.commons.exception.LoginFailedException;
+import py.org.icarusdb.commons.exception.RegisteredUserException;
+import py.org.icarusdb.commons.util.GlobalParameters;
+import py.org.icarusdb.commons.util.UriBuilder;
 
 /**
  * @author rgamarra
