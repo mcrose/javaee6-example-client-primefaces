@@ -28,6 +28,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
 import py.org.icarusdb.commons.util.GlobalParameters;
+import py.org.icarusdb.util.AppHelper;
 
 public class SessionParameters extends GlobalParameters
 {

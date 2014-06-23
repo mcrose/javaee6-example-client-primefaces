@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3c.org/1999/xhtml"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    xmlns:p="http://primefaces.org/ui" 
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets" >
     
-    <h:head>
-    </h:head>
+    <ui:composition template="/templates/dashboard.xhtml">
     
-    <h:body>
-        <p:inputText value="#{bean.value}" pt:placeholder="Watermark here" />
-    </h:body>
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="body">
+                
+            
+        </ui:define>
+            
+    </ui:composition>
     
 </html>
