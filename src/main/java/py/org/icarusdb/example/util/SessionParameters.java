@@ -30,6 +30,12 @@ import javax.inject.Named;
 import py.org.icarusdb.commons.util.GlobalParameters;
 import py.org.icarusdb.util.AppHelper;
 
+/**
+ * @author Betto McRose [icarus]
+ *         mcrose@icarusdb.com.py
+ *         mcrose.dev@gmail.com
+ *
+ */
 public class SessionParameters extends GlobalParameters
 {
     
