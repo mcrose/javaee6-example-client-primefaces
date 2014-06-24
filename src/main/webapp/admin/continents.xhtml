@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/templates/dashboard.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="content" > 
+        
+            <h:form id="listform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px;" 
+                     header="#{bundle['label.continents']}">
+                         
+                    <p:focus />
+                    <p:panelGrid id="datapanelg" columns="2" >
+                        
+                        <h:outputLabel for="name" style="width: 115px; "
+                                     value="#{bundle['label.continent.name']}" />
+                        <p:inputText id="name" size="40"  
+                                  value="#{continentController.name}" />
+                        
+                        <div align="right">
+                            <h:panelGroup>
+                                <p:commandButton id="clearbutton" icon="ui-icon-close" 
+                                             update=":listform"
+                                              value="#{bundle['button.label.clear']}" 
+                                     actionListener="#{continentController.clear}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="searchbutton" icon="ui-icon-search" 
+                                             update="collectionpanel printbutton" 
+                                              value="#{bundle['search.label.lookup']}" 
+                                     actionListener="#{continentController.search}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="printbutton" icon="ui-icon-print" 
+                                             update=":listform:processbutton" ajax="false"
+                                           disabled="#{not continentController.printable}"
+                                              value="#{bundle['button.label.print']}" 
+                                     actionListener="#{continentController.print}" />
+                            </h:panelGroup>
+                        </div>
+                    
+                    </p:panelGrid>
+                    
+                </p:panel>
+                <br />
+                <p:panel id="collectionpanel" style="min-height: 50px; " 
+                     header="#{bundle['label.continents']}" toggleable="true">
+                     
+                    <p:dataTable id="datatablecollection" 
+                                var="_continent" rowIndexVar="_indexVar"
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="200"
+                           rendered="#{not empty continentController.resultList}"
+                              value="#{continentController.resultList}">
+                        
+                        <p:column headerText="#{bundle['label.name']}" >
+                            <h:outputText value="#{_continent.name}" />
+                        </p:column>
+
+                        <p:column width="70"   
+                             headerText="#{bundle['label.isActive']}">
+                            <div align="center">
+                                <p:selectBooleanCheckbox disabled="true" 
+                                             value="#{_continent.active}" />
+                            </div>
+                        </p:column>
+ 
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+            </h:form>
+            
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>

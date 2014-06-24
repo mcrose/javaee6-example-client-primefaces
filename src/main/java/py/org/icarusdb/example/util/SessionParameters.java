@@ -27,7 +27,7 @@ import java.util.Locale;
 import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
-import py.org.icarusdb.commons.util.GlobalParameters;
+import py.org.icarusdb.commons.parameter.GlobalParameters;
 import py.org.icarusdb.util.AppHelper;
 
 /**
@@ -41,6 +41,10 @@ public class SessionParameters extends GlobalParameters
     
     /** custom jboss-as-7.1.1.Final configuration folders */
     public static final String JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR = "example-server/connection";
+    
+    /** server-side module project */
+    public static final String EXAMPLE_SERVER_PROJECT_CFG_FILE_NAME = "example-rest.cfg.properties";
+    
     
     
     public static final String BUNDLE_URL = "py.com.icarusdb.demo.resources.Messages";

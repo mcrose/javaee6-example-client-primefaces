@@ -43,6 +43,11 @@ body {
   width: 500px;
   margin: 20px;
 }
+.contentWidth {
+    width: 92%; /*800px;*/
+    min-height:300px;
+}
+
 #aside {
   font-size: 0.9em;
   width: 275px;

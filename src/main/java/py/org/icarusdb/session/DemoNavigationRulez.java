@@ -16,13 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.icarusdb.util;
+package py.org.icarusdb.session;
 
-import java.io.IOException;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
-import javax.faces.context.FacesContext;
-
-import py.org.icarusdb.commons.parameter.NavigationRulezParameters;
+import py.org.icarusdb.util.NavigationRulez;
+import py.org.icarusdb.util.NavigationRulezHelper;
 
 /**
  * @author Betto McRose [icarus]
@@ -30,20 +30,15 @@ import py.org.icarusdb.commons.parameter.NavigationRulezParameters;
  *         mcrose.dev@gmail.com
  *
  */
-public class NavigationRulezHelper extends NavigationRulezParameters
+@Named(value="navigationRulez")
+@RequestScoped
+public class DemoNavigationRulez extends NavigationRulez
 {
-
-    public static void redirect(String url)
+    
+    public String goContinents()
     {
-        try
-        {
-            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        return "/admin/continents.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
     }
-
-
+    
+    
 }

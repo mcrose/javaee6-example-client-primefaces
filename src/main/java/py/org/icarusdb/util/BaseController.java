@@ -18,11 +18,7 @@
  */
 package py.org.icarusdb.util;
 
-import java.io.IOException;
-
-import javax.faces.context.FacesContext;
-
-import py.org.icarusdb.commons.parameter.NavigationRulezParameters;
+import java.io.Serializable;
 
 /**
  * @author Betto McRose [icarus]
@@ -30,20 +26,29 @@ import py.org.icarusdb.commons.parameter.NavigationRulezParameters;
  *         mcrose.dev@gmail.com
  *
  */
-public class NavigationRulezHelper extends NavigationRulezParameters
+public abstract class BaseController implements Serializable
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3167847061881759865L;
+    
+    protected String actionSubTitle = null;
+    protected String action = null;
 
-    public static void redirect(String url)
+
+    protected String serverUri = null; 
+    protected String summary = null;
+
+    
+    public String getActionSubTitle()
     {
-        try
-        {
-            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        return actionSubTitle;
     }
 
-
+    public boolean isView()
+    {
+        return (action != null && action.contains("view"));
+    }
+    
 }

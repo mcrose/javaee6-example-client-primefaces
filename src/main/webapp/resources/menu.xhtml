@@ -20,13 +20,9 @@
                         <p:submenu icon="ui-icon-bookmark"  
                             label="#{bundle['admin']}">  
                             
-                            <p:menuitem id="menu1" icon="ui-icon-circle-plus"  
-                                     value="menu1" 
-                                      ajax="false" action="#" />
-                                        
-                            <p:menuitem id="menu2" icon="ui-icon-circle-check" 
-                                     value="menu2" 
-                                      ajax="false" action="#" />
+                            <p:menuitem id="mi-continents" icon="ui-icon-circle-plus"  
+                                     value="#{bundle['label.continents']}" 
+                                      ajax="false" action="#{navigationRulez.goContinents()}" />
                                         
                         </p:submenu>  
                           

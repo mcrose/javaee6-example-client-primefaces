@@ -1,0 +1,6 @@
+JBOSS-AS 7 configuration
+========================
+*-rest.cfg.properties MUST go onto server folder
+in jboss.server.config.dir/example/connection/
+
+if folder does not exists... create it!

@@ -36,7 +36,7 @@ import py.org.icarusdb.commons.exception.ActiveUserException;
 import py.org.icarusdb.commons.exception.ConfigException;
 import py.org.icarusdb.commons.exception.LoginFailedException;
 import py.org.icarusdb.commons.exception.RegisteredUserException;
-import py.org.icarusdb.commons.util.GlobalParameters;
+import py.org.icarusdb.commons.parameter.GlobalParameters;
 import py.org.icarusdb.commons.util.UriBuilder;
 
 /**

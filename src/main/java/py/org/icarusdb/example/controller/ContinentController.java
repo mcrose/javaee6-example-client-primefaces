@@ -25,19 +25,20 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
-import org.primefaces.event.CloseEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.example.model.Continent;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
+import py.org.icarusdb.example.util.SessionParameters;
+import py.org.icarusdb.session.ContextHelper;
 import py.org.icarusdb.util.AppHelper;
+import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 
 /**
@@ -48,45 +49,74 @@ import py.org.icarusdb.util.MessageUtil;
  */
 @ManagedBean
 @ViewScoped
-public class ContinentSearchController implements Serializable
+//TODO add roles
+public class ContinentController extends BaseController implements Serializable
 {
-    private static final Logger LOGGER = Logger.getLogger(ContinentSearchController.class);
+    private static final Logger LOGGER = Logger.getLogger(ContinentController.class);
+    
+    
+    @Inject 
+    private ContextHelper contextHelper;
+    
+
+    private ContinentClientService service = null;
+
+    private List<Continent> resultList = null;
+    private Continent continent = null;
     
     private String name = null;
-    private ContinentClientService service = null;
-    private String serverUri = null; 
-    private List<Continent> continents = null;
-    private Continent continent = null;
-    private String summary = null; 
     
     @PostConstruct
     public void init()
     {
+        // TODO add navigation control
+        
         try
         {
-            serverUri = AppHelper.getRESTfullConfig("example-rest.cfg.properties");
+            //TODO make a class where to store property connection info
+            //     could be: load the property file
+            //               then store the info
+            //               finally create this URI
+            serverUri = AppHelper.getRESTfullConfig(
+                            "serviceNameContinents",
+                            SessionParameters.EXAMPLE_SERVER_PROJECT_CFG_FILE_NAME, 
+                            SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR
+                        );
         }
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
-            String err = "No se pudo encontrar el archivo de configuracion de los servicios RESTful de AgenDA";
-            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, err , "");
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            LOGGER.error(e.getMessage());
             
-            LOGGER.error(err);
+            MessageUtil.addFacesMessageError("error.not.found.config.file");;
         }
         catch (IOException e)
         {
             e.printStackTrace();
-            String err = "No se pudo leer el archivo de configuracion de los servicios RESTful de AgenDA";
-            FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, err , "");
-            FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+            LOGGER.error(e.getMessage());
             
-            LOGGER.error(err);
+            MessageUtil.addFacesMessageError("error.not.found.config.file");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            LOGGER.error(e);
+            MessageUtil.addFacesMessageError("error.unknown");
         }
         
+        initVarz();
+        
         service = new ContinentClientService();
-        continents  = service.getContinents(serverUri);
+        System.out.println(serverUri);
+        resultList = service.getContinents(serverUri);
+    }
+    
+    private void initVarz()
+    {
+        resultList = null;
+        continent = null;
+        summary = null; 
+        name = null;
     }
     
     
@@ -100,40 +130,27 @@ public class ContinentSearchController implements Serializable
         this.name = name;
     }
     
-    public List<Continent> getContinents()
+    public List<Continent> getResultList()
     {
-        return continents;
+        return resultList;
     }
     
     public void search(AjaxBehaviorEvent event)
     {
         if(name == null || name.isEmpty()) 
         {
-            continents = service.getContinents(serverUri);
+            resultList = service.getContinents(serverUri);
         }
         else
         {
             Properties parameters = new IDBProperties();
-            parameters.put("nombreApellido", name);
+            parameters.put("name", name);
             
-            continents = service.getContinents(serverUri + "/name", parameters);
+            resultList = service.getContinents(serverUri + "/name", parameters);
         }
         
         
     }
-
-    public void handleClose(CloseEvent event)
-    {
-        if(summary != null) 
-        {
-            LOGGER.info(summary);
-            
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            summary = null;
-        }
-    }    
-    
 
     public Continent getContinent()
     {
@@ -165,6 +182,36 @@ public class ContinentSearchController implements Serializable
                 summary = MessageUtil.retrieveMessage("label.record.updated");
             }
         }
+    }
+
+    public void clear()
+    {
+        // TODO check
+        contextHelper.clearAction();
+        
+        initVarz();
+    }
+
+    public boolean isPrintable()
+    {
+        return (resultList != null) && (!resultList.isEmpty());
+    }
+    
+    // TODO implement report 
+    public void print()
+    {
+//        reportController.init();
+//        
+//        reportController.setReportPath("/reports");
+//        reportController.setReportTemplateName("Continents");
+//
+//        reportController.setReportName("Continents");
+//        reportController.addDataSourceEntityCollection(resultList);
+//        
+//        reportController.addParameter("name" , name);
+//        
+//        reportController.print();
+//        
     }
     
 }
