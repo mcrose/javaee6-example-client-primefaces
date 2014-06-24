@@ -28,15 +28,22 @@
         </div>
         
         <div id="menu" style="width: 100%;  border: 1px">
+            <p:spacer height="10px" />
+            <p:outputPanel autoUpdate="true" id="userinfopanel">
+                <div align="left" style="width: 500px;" >
+                    <h:outputText style="padding-left: 15px;" 
+                                  value="#{credentials.username} :: #{credentials.ipAddr}" />
+                </div>
+            </p:outputPanel>
             <ui:include src="/resources/menu.xhtml" />
         </div>
         
-        <div id="center" style="width: 100%;  border: 1px">
-            <ui:insert name="content">Put default content here, if any.</ui:insert>
+        <div id="center" style="width: 100%; padding-left: 15px;">
+            <ui:insert name="content" />
         </div>
                 
-        <div id="footer" style="width: 100%;  border: 1px">
-            <ui:include src="/resources/footer.xhtml" />
+        <div id="footer" style="width: 100%;">
+<!--             <ui:include src="/resources/footer.xhtml" /> -->
         </div>
 
         <p:ajaxStatus id="ajaxstatuspanel" 
