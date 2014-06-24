@@ -18,8 +18,6 @@
  */
 package py.org.icarusdb.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -32,9 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.RollbackException;
 
+import py.org.icarusdb.commons.util.AppBaseHelper;
 import py.org.icarusdb.commons.util.BundleHelper;
-import py.org.icarusdb.commons.util.FileHelper;
-import py.org.icarusdb.commons.util.UriBuilder;
 import py.org.icarusdb.example.util.SessionParameters;
 
 /**
@@ -43,7 +40,7 @@ import py.org.icarusdb.example.util.SessionParameters;
  *         mcrose.dev@gmail.com
  *
  */
-public class AppHelper
+public class AppHelper extends AppBaseHelper
 {
     
     public static String getDomainUrl()
@@ -138,25 +135,14 @@ public class AppHelper
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, "system.errors"));
     }
 
-    /**
-     * checks for the given String if it has any values
-     * 
-     * @param string
-     * @return
-     */
-    public static boolean nothing(String string)
-    {
-        return string==null||string.isEmpty();
-    }
-
     public static String getClientIpAddr()
     {
         return getServletRequest().getRemoteAddr();
     }
 
-    public static String getRESTfullConfig(String cfgFileName) throws FileNotFoundException, IOException
-    {
-        return UriBuilder.buildLoginUri(FileHelper.loadConfigParams(cfgFileName, SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR));
-    }
+//    public static String getRESTfullConfig(String cfgFileName) throws FileNotFoundException, IOException
+//    {
+//        return UriBuilder.buildLoginUri(FileHelper.loadConfigParams(cfgFileName, SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR));
+//    }
     
 }
