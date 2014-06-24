@@ -31,9 +31,9 @@ body {
   border-left: 5px solid #8c8f91;
   border-right: 5px solid #8c8f91;
   border-bottom: 25px solid #8c8f91;
-  width: 865px; /* subtract 40px from banner width for padding */
+  /*width: 865px; /* subtract 40px from banner width for padding */
   background: #FFFFFF;
-  background-image: url(#{request.contextPath}/resources/gfx/headerbkg.png);
+  /*background-image: url(#{request.contextPath}/resources/gfx/headerbkg.png);*/
   background-repeat: repeat-x;
   padding-top: 30px;
   box-shadow: 3px 3px 15px #d5d5d5;

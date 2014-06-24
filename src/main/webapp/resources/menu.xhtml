@@ -6,10 +6,10 @@
 
     <!-- TODO implement loggedIn -->
     
-    <h:form id="menubar_form" style="width: 90%; border: none;">
+    <h:form id="menubar_form" style="width:90%; border:none; ">
 
         <p:outputPanel autoUpdate="true">
-        <table class="containerWidth" >
+        <table class="container" >
             <tr>
                 <td class="menuWidth" >
                     <p:menubar id="bar_mainmenu" >  
@@ -57,7 +57,7 @@
             
                         <p:submenu icon="ui-icon-star" label="about" >  
                             <p:menuitem value="#{bundle['label.about']}" url="#" 
-                                      onclick="aboutPanel.show();" />  
+                                      onclick="PF('aboutPanel').show();" />  
                         </p:submenu>  
                                   
                     </p:menubar>  
@@ -104,10 +104,10 @@
                 <h:outputText value="CrunchBang Linux 11" />
 
                 <h:outputText value="developer" style="font-weight:bold" />
-                <h:outputText value="Icarus" />
+                <h:outputText value="Betto McRose [icarus]" />
                 
                 <h:outputText value="sys-admin" style="font-weight:bold" />
-                <h:outputText value="Betto McRose" />
+                <h:outputText value="mcrose@icarusdb.com.py" />
                 
             </h:panelGrid>
 
