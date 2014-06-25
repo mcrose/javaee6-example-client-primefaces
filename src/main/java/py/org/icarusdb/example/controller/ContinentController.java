@@ -36,6 +36,7 @@ import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
 import py.org.icarusdb.example.model.Continent;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
+import py.org.icarusdb.example.util.SessionParameters;
 import py.org.icarusdb.session.ContextHelper;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
