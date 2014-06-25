@@ -20,7 +20,7 @@
                      header="#{bundle['label.continents']}">
                          
                     <p:focus />
-                    <p:panelGrid id="datapanelg" columns="2" >
+                    <p:panelGrid id="datapanelg" columns="2" style="border: none;">
                         
                         <h:outputLabel for="name" style="width: 115px; "
                                      value="#{bundle['label.continent.name']}" />
@@ -48,21 +48,39 @@
                         </div>
                     
                     </p:panelGrid>
+                    <div align="right">
+                        <p:commandButton id="add" update=":listform:collectionpanel" 
+                                      value="#{bundle['label.add']}"
+                             actionListener="#{continentController.add}" />
+                    </div>
                     
                 </p:panel>
                 <br />
                 <p:panel id="collectionpanel" style="min-height: 50px; " 
                      header="#{bundle['label.continents']}" toggleable="true">
                      
-                    <p:dataTable id="datatablecollection" 
+                    <p:dataTable id="datatablecollection" editable="true"
                                 var="_continent" rowIndexVar="_indexVar"
                          scrollable="true" scrollRows="#{searchMaxResutl}" 
                          liveScroll="true" scrollHeight="200"
                            rendered="#{not empty continentController.resultList}"
-                              value="#{continentController.resultList}">
+                              value="#{continentController.resultList}" 
+                       emptyMessage="#{bundle['search.label.noRecordsFound']}">
                         
-                        <p:column headerText="#{bundle['label.name']}" >
-                            <h:outputText value="#{_continent.name}" />
+                            <p:ajax event="rowEdit" update=":messages"
+                                 listener="#{continentController.onRowEdit}"  />
+                            <p:ajax event="rowEditCancel" update=":messages" 
+                                 listener="#{continentController.onRowCancel}" />
+                         
+                       <p:column headerText="#{bundle['label.name']}" >
+                           <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{_continent.name}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="nameInput" value="#{_continent.name}" style="width:100%"/>
+                                </f:facet>
+                           </p:cellEditor>
                         </p:column>
 
                         <p:column width="70"   
@@ -73,6 +91,33 @@
                             </div>
                         </p:column>
  
+                        <p:column width="70" 
+                             headerText="#{bundle['label.actions']}">
+                        
+                            <p:rowEditor />
+                            <p:spacer width="10" />
+
+                            <p:commandLink id="activatelink" immediate="true" 
+                                     disabled="#{_continent.active}" update=":listform:collectionpanel"
+                                     rendered="#{continentController.showActivationButtons}"
+                                        value="#{bundle['button.label.activate']}"
+                                       action="#{continentController.activate}" >
+                                <f:setPropertyActionListener value="#{_continent}"
+                                                            target="#{continentController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+                            
+                            <p:commandLink id="inactivatelink" immediate="true"
+                                     disabled="#{not _continent.active}" update=":listform:collectionpanel"
+                                     rendered="#{continentController.showActivationButtons}" 
+                                        value="#{bundle['button.label.inactivate']}"
+                                       action="#{continentController.inactivate}" >
+                                <f:setPropertyActionListener value="#{_continent}"
+                                                            target="#{continentController.selectedRow}" />
+                            </p:commandLink>
+
+                        </p:column>
+                                                    
                     </p:dataTable>  
                     <p:spacer height="10px" />
                          

@@ -21,6 +21,7 @@ package py.org.icarusdb.example.controller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,16 +29,15 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
-import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
+import org.primefaces.component.celleditor.CellEditor;
+import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
 import py.org.icarusdb.example.model.Continent;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
-import py.org.icarusdb.example.util.SessionParameters;
-import py.org.icarusdb.session.ContextHelper;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
@@ -56,19 +56,22 @@ public class ContinentController extends BaseController implements Serializable
     private static final Logger LOGGER = Logger.getLogger(ContinentController.class);
     
     
-    @Inject 
-    private ContextHelper contextHelper;
+//    @Inject 
+//    private ContextHelper contextHelper;
     
 
     private ContinentClientService service = null;
 
     private List<Continent> resultList = null;
-    private Continent continent = null;
+    private Continent selectedRow = null;
     
     private String name = null;
 
-
     private String serviveLookupByName = null;
+
+    private boolean showActivationButtons = true;
+    
+
     
     @PostConstruct
     public void init()
@@ -111,12 +114,21 @@ public class ContinentController extends BaseController implements Serializable
     private void initVarz()
     {
         resultList = null;
-        continent = null;
+        selectedRow = null;
         summary = null; 
         name = null;
     }
     
-    
+    public Continent getSelectedRow()
+    {
+        return selectedRow ;
+    }
+
+    public void setSelectedRow(Continent selectedRow)
+    {
+        this.selectedRow = selectedRow;
+    }
+
     public String getName()
     {
         return name;
@@ -132,6 +144,27 @@ public class ContinentController extends BaseController implements Serializable
         return resultList;
     }
     
+    private String getServiceLookupByName()
+    {
+        if (serviveLookupByName == null)
+        {
+            serviveLookupByName = service.getConnInfo("serviceNameFindByName"); 
+        }
+        return serviveLookupByName ;
+    }
+
+    public boolean isShowActivationButtons()
+    {
+        return showActivationButtons;
+    }
+    
+    public boolean isPrintable()
+    {
+        return (resultList != null) && (!resultList.isEmpty());
+    }
+
+    
+    
     public void search(ActionEvent actionEvent)
     {
         if(name == null || name.isEmpty()) 
@@ -146,26 +179,6 @@ public class ContinentController extends BaseController implements Serializable
             resultList = service.getContinents(serverUri + getServiceLookupByName(), parameters);
         }
         
-        
-    }
-
-    private String getServiceLookupByName()
-    {
-        if (serviveLookupByName == null)
-        {
-            serviveLookupByName = service.getConnInfo("serviceNameFindByName"); 
-        }
-        return serviveLookupByName ;
-    }
-
-    public Continent getContinent()
-    {
-        return continent ;
-    }
-
-    public void setContinent(Continent selectedRow)
-    {
-        this.continent = selectedRow;
     }
 
     public void save()
@@ -174,7 +187,7 @@ public class ContinentController extends BaseController implements Serializable
         
         try
         {
-            result = service.update(serverUri + "/update", continent);
+            result = service.update(serverUri + "/update", selectedRow);
         }
         catch (Exception e) 
         {
@@ -186,21 +199,62 @@ public class ContinentController extends BaseController implements Serializable
             if(result != null)
             {
                 summary = MessageUtil.retrieveMessage("label.record.updated");
+                selectedRow = null;
             }
+            
+            showActivationButtons = true;
         }
     }
 
     public void clear()
     {
-        // TODO check
-        contextHelper.clearAction();
-        
         initVarz();
     }
-
-    public boolean isPrintable()
+    
+    public void add()
     {
-        return (resultList != null) && (!resultList.isEmpty());
+        selectedRow = new Continent();
+        selectedRow.setActive(true);
+        
+        if (resultList == null) {
+            resultList = new LinkedList<Continent>();
+        }
+        
+        resultList.add(selectedRow);
+        
+        showActivationButtons = false;
+    }
+    
+    public void onCellEdit(CellEditor editor)
+    {
+        showActivationButtons = !showActivationButtons;
+    }
+    
+    public void onRowEdit(RowEditEvent event)
+    {
+        selectedRow = (Continent) event.getObject();
+        save();
+    }
+    
+    public void onRowCancel(RowEditEvent event)
+    {
+        showActivationButtons = true;
+        selectedRow = (Continent) event.getObject();
+        
+        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
+        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
+    }
+
+    public void activate()
+    {
+        selectedRow.setActive(true);
+        save();
+    }
+    
+    public void inactivate()
+    {
+        selectedRow.setActive(false);
+        save();
     }
     
     // TODO implement report 
@@ -219,5 +273,7 @@ public class ContinentController extends BaseController implements Serializable
 //        reportController.print();
 //        
     }
+    
+
     
 }
