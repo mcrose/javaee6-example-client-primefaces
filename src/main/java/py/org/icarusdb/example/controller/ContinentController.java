@@ -27,15 +27,15 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
 import py.org.icarusdb.commons.util.IDBProperties;
+import py.org.icarusdb.commons.util.UriBuilder;
 import py.org.icarusdb.example.model.Continent;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
-import py.org.icarusdb.example.util.SessionParameters;
 import py.org.icarusdb.session.ContextHelper;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
@@ -65,23 +65,19 @@ public class ContinentController extends BaseController implements Serializable
     private Continent continent = null;
     
     private String name = null;
+
+
+    private String serviveLookupByName = null;
     
     @PostConstruct
     public void init()
     {
         // TODO add navigation control
+
         
         try
         {
-            //TODO make a class where to store property connection info
-            //     could be: load the property file
-            //               then store the info
-            //               finally create this URI
-            serverUri = AppHelper.getRESTfullConfig(
-                            "serviceNameContinents",
-                            SessionParameters.EXAMPLE_SERVER_PROJECT_CFG_FILE_NAME, 
-                            SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR
-                        );
+            service = new ContinentClientService();
         }
         catch (FileNotFoundException e)
         {
@@ -106,9 +102,9 @@ public class ContinentController extends BaseController implements Serializable
         
         initVarz();
         
-        service = new ContinentClientService();
-        System.out.println(serverUri);
+        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameContinents");
         resultList = service.getContinents(serverUri);
+        
     }
     
     private void initVarz()
@@ -135,7 +131,7 @@ public class ContinentController extends BaseController implements Serializable
         return resultList;
     }
     
-    public void search(AjaxBehaviorEvent event)
+    public void search(ActionEvent actionEvent)
     {
         if(name == null || name.isEmpty()) 
         {
@@ -146,10 +142,19 @@ public class ContinentController extends BaseController implements Serializable
             Properties parameters = new IDBProperties();
             parameters.put("name", name);
             
-            resultList = service.getContinents(serverUri + "/name", parameters);
+            resultList = service.getContinents(serverUri + getServiceLookupByName(), parameters);
         }
         
         
+    }
+
+    private String getServiceLookupByName()
+    {
+        if (serviveLookupByName == null)
+        {
+            serviveLookupByName = service.getConnInfo("serviceNameFindByName"); 
+        }
+        return serviveLookupByName ;
     }
 
     public Continent getContinent()

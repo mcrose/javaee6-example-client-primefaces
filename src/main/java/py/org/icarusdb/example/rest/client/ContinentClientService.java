@@ -22,6 +22,7 @@
  */
 package py.org.icarusdb.example.rest.client;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -46,10 +47,16 @@ import py.org.icarusdb.example.model.Continent;
  *         mcrose.dev@gmail.com
  *
  */
-public class ContinentClientService extends ServiceHelper
+public class ContinentClientService extends ExampleClientService
 {
+
+    public ContinentClientService() throws FileNotFoundException, IOException
+    {
+        super();
+    }
+
+
     private List<Continent> continents = null;
-    
     
     
     /**
@@ -178,5 +185,6 @@ public class ContinentClientService extends ServiceHelper
         
         return null;
     }
-    
+
+
 }
