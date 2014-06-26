@@ -34,8 +34,8 @@ import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
-import py.org.icarusdb.example.model.Continent;
-import py.org.icarusdb.example.rest.client.ContinentClientService;
+import py.org.icarusdb.example.model.Country;
+import py.org.icarusdb.example.rest.client.CountryClientService;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
@@ -49,34 +49,38 @@ import py.org.icarusdb.util.MessageUtil;
 @ManagedBean
 @ViewScoped
 //TODO add roles
-public class ContinentController extends BaseController implements Serializable
+public class CountryController extends BaseController implements Serializable
 {
-    private static final Logger LOGGER = Logger.getLogger(ContinentController.class);
+    private static final Logger LOGGER = Logger.getLogger(CountryController.class);
     
     
 //    @Inject 
 //    private ContextHelper contextHelper;
     
+//    @Inject
+//    ComboBoxActiveContinents activeContinents;
+    
 
-    private ContinentClientService service = null;
+    private CountryClientService service = null;
 
-    private List<Continent> resultList = null;
-    private Continent selectedRow = null;
+    private List<Country> resultList = null;
+    private Country selectedRow = null;
+//    private Continent selectedContinent = null;
     
     private String name = null;
 
     private String serviceLookupByName = null;
+    private String serviceNameSave = null;
 
     private boolean showActivationButtons = true;
     
-
     
     @PostConstruct
     public void init()
     {
         // TODO add navigation control
 
-        service = new ContinentClientService();
+        service = new CountryClientService();
         try
         {
             service.loadConfig();
@@ -89,8 +93,9 @@ public class ContinentController extends BaseController implements Serializable
         
         initVarz();
         
-        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameContinents");
-        resultList = service.getContinents(serverUri);
+        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameCountries");
+        resultList = service.getCountries(serverUri);
+        
         
     }
     
@@ -98,19 +103,31 @@ public class ContinentController extends BaseController implements Serializable
     {
         resultList = null;
         selectedRow = null;
+//        selectedContinent = null;
+        
         summary = null; 
         name = null;
     }
     
-    public Continent getSelectedRow()
+    public Country getSelectedRow()
     {
         return selectedRow ;
     }
 
-    public void setSelectedRow(Continent selectedRow)
+    public void setSelectedRow(Country selectedRow)
     {
         this.selectedRow = selectedRow;
     }
+    
+//    public Continent getSelectedContinent()
+//    {
+//        return selectedContinent;
+//    }
+//    
+//    public void setSelectedContinent(Continent selectedContinent)
+//    {
+//        this.selectedContinent = selectedContinent;
+//    }
 
     public String getName()
     {
@@ -122,7 +139,7 @@ public class ContinentController extends BaseController implements Serializable
         this.name = name;
     }
     
-    public List<Continent> getResultList()
+    public List<Country> getResultList()
     {
         return resultList;
     }
@@ -135,6 +152,17 @@ public class ContinentController extends BaseController implements Serializable
         }
         return serviceLookupByName ;
     }
+    
+    private String getServiceSave()
+    {
+        if (serviceNameSave == null)
+        {
+            serviceNameSave = service.getConnInfo("serviceNameSave"); 
+        }
+        return serviceNameSave ;
+    }
+
+    
 
     public boolean isShowActivationButtons()
     {
@@ -152,14 +180,14 @@ public class ContinentController extends BaseController implements Serializable
     {
         if(name == null || name.isEmpty()) 
         {
-            resultList = service.getContinents(serverUri);
+            resultList = service.getCountries(serverUri);
         }
         else
         {
             Properties parameters = new IDBProperties();
             parameters.put("name", name);
             
-            resultList = service.getContinents(serverUri + getServiceLookupByName(), parameters);
+            resultList = service.getCountries(serverUri + getServiceLookupByName(), parameters);
         }
         
     }
@@ -170,7 +198,9 @@ public class ContinentController extends BaseController implements Serializable
         
         try
         {
-            result = service.update(serverUri + "/update", selectedRow);
+//            selectedRow.setContinent(selectedContinent);
+            
+            result = service.save(serverUri + getServiceSave(), selectedRow);
         }
         catch (Exception e) 
         {
@@ -196,11 +226,11 @@ public class ContinentController extends BaseController implements Serializable
     
     public void add()
     {
-        selectedRow = new Continent();
+        selectedRow = new Country();
         selectedRow.setActive(true);
         
         if (resultList == null) {
-            resultList = new LinkedList<Continent>();
+            resultList = new LinkedList<Country>();
         }
         
         resultList.add(selectedRow);
@@ -215,14 +245,14 @@ public class ContinentController extends BaseController implements Serializable
     
     public void onRowEdit(RowEditEvent event)
     {
-        selectedRow = (Continent) event.getObject();
+        selectedRow = (Country) event.getObject();
         save();
     }
     
     public void onRowCancel(RowEditEvent event)
     {
         showActivationButtons = true;
-        selectedRow = (Continent) event.getObject();
+        selectedRow = (Country) event.getObject();
         
         String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
         MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
@@ -246,9 +276,9 @@ public class ContinentController extends BaseController implements Serializable
 //        reportController.init();
 //        
 //        reportController.setReportPath("/reports");
-//        reportController.setReportTemplateName("Continents");
+//        reportController.setReportTemplateName("Countries");
 //
-//        reportController.setReportName("Continents");
+//        reportController.setReportName("Countries");
 //        reportController.addDataSourceEntityCollection(resultList);
 //        
 //        reportController.addParameter("name" , name);

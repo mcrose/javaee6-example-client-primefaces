@@ -31,14 +31,16 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 
 import py.org.icarusdb.commons.exception.ActiveUserException;
 import py.org.icarusdb.commons.exception.ConfigException;
 import py.org.icarusdb.commons.exception.LoginFailedException;
 import py.org.icarusdb.commons.exception.RegisteredUserException;
-import py.org.icarusdb.example.model.Continent;
+import py.org.icarusdb.example.model.Country;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 
 /**
  * @author Betto McRose [icarus]
@@ -46,16 +48,16 @@ import py.org.icarusdb.example.model.Continent;
  *         mcrose.dev@gmail.com
  *
  */
-public class ContinentClientService extends ExampleClientService
+public class CountryClientService extends ExampleClientService
 {
 
-    public ContinentClientService()
+    public CountryClientService()
     {
         super();
     }
 
 
-    private List<Continent> continents = null;
+    private List<Country> countries = null;
     
     
     /**
@@ -64,78 +66,59 @@ public class ContinentClientService extends ExampleClientService
      * @param connectUri
      * @return
      */
-    public List<Continent> getContinents(String connectUri)
+    public List<Country> getCountries(String connectUri)
     {
-        try
-        {
-            createConnection(connectUri);
-            
-            response = request.get(String.class);
-            
-            retrieveInfo();
-            
-        }
-        catch (JsonGenerationException e1)
-        {
-            e1.printStackTrace();
-        }
-        catch (JsonMappingException e1)
-        {
-            e1.printStackTrace();
-        }
-        catch (IOException e1)
-        {
-            e1.printStackTrace();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return continents;
+        return getCountries(connectUri, null);
     }
 
 
     /**
-     * connect to RESTful services via POST
+     * connects to RESTful services via POST when @param parameters have values
+     * otherwise connects via GET
      * 
-     * @param connectUri
+     * @param connectUri valid URI, http://servername:port/modulename/serviceuri/servicename[/action]
      * @param parameters
-     * @return
+     * 
+     * @return {@link Country} or empty list 
      */
-    public List<Continent> getContinents(String connectUri, Properties parameters)
+    public List<Country> getCountries(String connectUri, Properties parameters)
     {
         try
         {
             createConnection(connectUri);
             
-            if(parameters == null || parameters.isEmpty()) return null;
-            
-            request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(parameters));
-
-            response = request.post(String.class);
+            if(parameters == null || parameters.isEmpty())
+            {
+                response = request.get(String.class);
+            }
+            else
+            {
+                request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(parameters));
+                
+                response = request.post(String.class);
+            }
             
             retrieveInfo();
             
         }
-        catch (JsonGenerationException e1)
+        catch (JsonGenerationException e)
         {
-            e1.printStackTrace();
+            e.printStackTrace();
         }
-        catch (JsonMappingException e1)
+        catch (JsonMappingException e)
         {
-            e1.printStackTrace();
+            e.printStackTrace();
         }
-        catch (IOException e1)
+        catch (IOException e)
         {
-            e1.printStackTrace();
+            e.printStackTrace();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
-        return continents;
+        return countries;
     }
 
 
@@ -145,17 +128,21 @@ public class ContinentClientService extends ExampleClientService
     {
         readResponse();
 
-        continents = new ObjectMapper().readValue(response.getEntity().toString(), new TypeReference<List<Continent>>() { });
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Hibernate4Module());
+        
+        countries = (List<Country>) mapper.readValue(response.getEntity().toString(), new TypeReference<List<Country>>() { });
+        
     }
 
 
-    public String update(String uri, Continent continent)
+    public String save(String uri, Country country)
     {
         try
         {
             createConnection(uri);
             
-            request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(continent));
+            request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(country));
             
             response = request.post(String.class);
             
@@ -181,6 +168,7 @@ public class ContinentClientService extends ExampleClientService
             e.printStackTrace();
         }
 
+        
         return null;
     }
 

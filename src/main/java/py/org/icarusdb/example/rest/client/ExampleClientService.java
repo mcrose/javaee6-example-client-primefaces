@@ -26,9 +26,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
+import org.jboss.logging.Logger;
+
 import py.org.icarusdb.commons.rest.client.ServiceHelper;
 import py.org.icarusdb.commons.util.FileHelper;
 import py.org.icarusdb.example.util.SessionParameters;
+import py.org.icarusdb.util.MessageUtil;
 
 /**
  * @author Betto McRose [icarus]
@@ -38,16 +41,11 @@ import py.org.icarusdb.example.util.SessionParameters;
  */
 public class ExampleClientService extends ServiceHelper
 {
+    private static final Logger LOGGER = Logger.getLogger(ExampleClientService.class);
 
-    public ExampleClientService() throws FileNotFoundException, IOException
+    public ExampleClientService()
     {
         super();
-        addConnConfigParamater(
-                FileHelper.loadConfigParams(
-                        SessionParameters.EXAMPLE_SERVER_PROJECT_CFG_FILE_NAME, 
-                        SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR
-                )
-        );
     }
     
     @Override
@@ -60,6 +58,40 @@ public class ExampleClientService extends ServiceHelper
     public Map<String, String> getConnInfo()
     {
         return super.connInfo;
+    }
+
+    @Override
+    public void loadConfig()
+    {
+        try
+        {
+            addConnConfigParamater(
+                    FileHelper.loadConfigParams(
+                            SessionParameters.EXAMPLE_SERVER_PROJECT_CFG_FILE_NAME, 
+                            SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR
+                            )
+                    );
+            }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            
+            MessageUtil.addFacesMessageError("error.not.found.config.file");;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            
+            MessageUtil.addFacesMessageError("error.not.found.config.file");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            LOGGER.error(e);
+            MessageUtil.addFacesMessageError("error.unknown");
+        }
     }
 
 

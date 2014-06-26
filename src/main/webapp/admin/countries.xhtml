@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/templates/dashboard.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="content" > 
+        
+            <h:form id="listform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px; border:0 !important;" 
+                     header="#{bundle['label.countries']}">
+                         
+                    <p:focus />
+                    <p:panelGrid id="datapanelg" columns="2" style="border: none;">
+                        
+                        <h:outputLabel for="name" style="width: 115px; "
+                                     value="#{bundle['label.country.name']}" />
+                        <p:inputText id="name" size="40"  
+                                  value="#{countryController.name}" />
+                        
+                        <div align="right">
+                            <h:panelGroup>
+                                <p:commandButton id="clearbutton" icon="ui-icon-close" 
+                                             update=":listform"
+                                              value="#{bundle['button.label.clear']}" 
+                                     actionListener="#{countryController.clear}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="searchbutton" icon="ui-icon-search" 
+                                             update="collectionpanel printbutton" 
+                                              value="#{bundle['search.label.lookup']}" 
+                                     actionListener="#{countryController.search}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="printbutton" icon="ui-icon-print" 
+                                             update=":listform:processbutton" ajax="false"
+                                           disabled="#{not countryController.printable}"
+                                              value="#{bundle['button.label.print']}" 
+                                     actionListener="#{countryController.print}" />
+                            </h:panelGroup>
+                        </div>
+                    
+                    </p:panelGrid>
+                    <div align="right">
+                        <p:commandButton id="add" update=":listform:collectionpanel" 
+                                      value="#{bundle['label.add']}"
+                             actionListener="#{countryController.add}" />
+                    </div>
+                    
+                </p:panel>
+                <br />
+                <p:panel id="collectionpanel" style="min-height: 50px; " 
+                     header="#{bundle['label.countries']}" toggleable="true">
+                     
+                    <p:dataTable id="datatablecollection" editable="true"
+                                var="_country" rowIndexVar="_indexVar"
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="200"
+                           rendered="#{not empty countryController.resultList}"
+                              value="#{countryController.resultList}" 
+                       emptyMessage="#{bundle['search.label.noRecordsFound']}">
+                        
+                            <p:ajax event="rowEdit" update=":messages"
+                                 listener="#{countryController.onRowEdit}"  />
+                            <p:ajax event="rowEditCancel" update=":messages" 
+                                 listener="#{countryController.onRowCancel}" />
+                         
+                       <p:column headerText="#{bundle['label.name']}" >
+                           <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{_country.name}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="nameInput" value="#{_country.name}" style="width:100%"/>
+                                </f:facet>
+                           </p:cellEditor>
+                        </p:column>
+
+                       <p:column headerText="#{bundle['label.continent']}" >
+                           <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{_country.continent.name}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu id="countryInput" immediate="true" styleClass="combobox" 
+                                                  value="#{countryController.selectedRow.continent}">
+                                         <f:selectItem itemLabel="Select One" itemValue="" />
+                                         <f:selectItems var="_activeContinent" value="#{comboBoxActiveContinents}"  
+                                                  itemValue="#{_activeContinent}"
+                                                  itemLabel="#{_activeContinent.name}" /> 
+                                    </p:selectOneMenu>
+                                </f:facet>
+                           </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="70"   
+                             headerText="#{bundle['label.isActive']}">
+                            <div align="center">
+                                <p:selectBooleanCheckbox disabled="true" 
+                                             value="#{_country.active}" />
+                            </div>
+                        </p:column>
+ 
+                        <p:column width="150" 
+                             headerText="#{bundle['label.actions']}">
+                        
+                            <p:commandLink id="activatelink" immediate="true" 
+                                     disabled="#{_country.active}" update=":listform:collectionpanel"
+                                     rendered="#{countryController.showActivationButtons}"
+                                        value="#{bundle['button.label.activate']}"
+                                       action="#{countryController.activate}" >
+                                <f:setPropertyActionListener value="#{_country}"
+                                                            target="#{countryController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            
+                            <p:commandLink id="inactivatelink" immediate="true"
+                                     disabled="#{not _country.active}" update=":listform:collectionpanel"
+                                     rendered="#{countryController.showActivationButtons}" 
+                                        value="#{bundle['button.label.inactivate']}"
+                                       action="#{countryController.inactivate}" >
+                                <f:setPropertyActionListener value="#{_country}"
+                                                            target="#{countryController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            <p:rowEditor />
+                        </p:column>
+                                                    
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+            </h:form>
+            
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>
