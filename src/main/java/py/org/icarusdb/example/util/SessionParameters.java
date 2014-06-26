@@ -47,7 +47,7 @@ public class SessionParameters extends GlobalParameters
     
     
     
-    public static final String BUNDLE_URL = "py.com.icarusdb.demo.resources.Messages";
+    public static final String BUNDLE_URL = "py.org.icarusdb.resources.Messages";
 
     @Produces @Named final int getSearchMaxResutl()
     {

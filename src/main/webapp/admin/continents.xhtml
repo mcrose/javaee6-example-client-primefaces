@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
@@ -91,12 +91,9 @@
                             </div>
                         </p:column>
  
-                        <p:column width="70" 
+                        <p:column width="150" 
                              headerText="#{bundle['label.actions']}">
                         
-                            <p:rowEditor />
-                            <p:spacer width="10" />
-
                             <p:commandLink id="activatelink" immediate="true" 
                                      disabled="#{_continent.active}" update=":listform:collectionpanel"
                                      rendered="#{continentController.showActivationButtons}"
@@ -106,6 +103,7 @@
                                                             target="#{continentController.selectedRow}" />
                             </p:commandLink>
                             <p:spacer width="10" />
+
                             
                             <p:commandLink id="inactivatelink" immediate="true"
                                      disabled="#{not _continent.active}" update=":listform:collectionpanel"
@@ -115,7 +113,9 @@
                                 <f:setPropertyActionListener value="#{_continent}"
                                                             target="#{continentController.selectedRow}" />
                             </p:commandLink>
+                            <p:spacer width="10" />
 
+                            <p:rowEditor />
                         </p:column>
                                                     
                     </p:dataTable>  
