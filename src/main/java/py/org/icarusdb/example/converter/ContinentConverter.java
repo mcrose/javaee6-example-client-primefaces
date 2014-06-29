@@ -30,7 +30,7 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 import py.org.icarusdb.commons.converter.EntityConverter;
-import py.org.icarusdb.example.model.Continent;
+import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.util.SessionParameters;
 
 /**
@@ -39,7 +39,7 @@ import py.org.icarusdb.example.util.SessionParameters;
  *         mcrose.dev@gmail.com
  *
  */
-@FacesConverter(forClass=Continent.class)
+@FacesConverter(forClass=ContinentDTO.class)
 public class ContinentConverter extends EntityConverter implements Converter
 {
     
@@ -50,21 +50,21 @@ public class ContinentConverter extends EntityConverter implements Converter
             return null;
         }
         
-        return getViewMap(context).get(value+Continent.class.getName());
+        return getViewMap(context).get(value+ContinentDTO.class.getName());
     }
 
     public String getAsString(FacesContext context, UIComponent component, Object object)
     {
         if(object == null) return null;
         
-        Continent entity = null;
+        ContinentDTO entity = null;
         try
         {
-            entity = (Continent) object;
+            entity = (ContinentDTO) object;
             Long id = entity.getId();
             if (id != null)
             {
-                getViewMap(context).put(id.toString()+Continent.class.getName(), object);
+                getViewMap(context).put(id.toString()+ContinentDTO.class.getName(), object);
                 
                 return id.toString();
             }

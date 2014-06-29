@@ -38,7 +38,7 @@ import py.org.icarusdb.commons.exception.ActiveUserException;
 import py.org.icarusdb.commons.exception.ConfigException;
 import py.org.icarusdb.commons.exception.LoginFailedException;
 import py.org.icarusdb.commons.exception.RegisteredUserException;
-import py.org.icarusdb.example.model.Continent;
+import py.org.icarusdb.example.model.ContinentDTO;
 
 /**
  * @author Betto McRose [icarus]
@@ -55,7 +55,7 @@ public class ContinentClientService extends ExampleClientService
     }
 
 
-    private List<Continent> continents = null;
+    private List<ContinentDTO> continents = null;
     
     
     /**
@@ -64,7 +64,7 @@ public class ContinentClientService extends ExampleClientService
      * @param connectUri
      * @return
      */
-    public List<Continent> getContinents(String connectUri)
+    public List<ContinentDTO> getContinents(String connectUri)
     {
         try
         {
@@ -103,7 +103,7 @@ public class ContinentClientService extends ExampleClientService
      * @param parameters
      * @return
      */
-    public List<Continent> getContinents(String connectUri, Properties parameters)
+    public List<ContinentDTO> getContinents(String connectUri, Properties parameters)
     {
         try
         {
@@ -145,11 +145,11 @@ public class ContinentClientService extends ExampleClientService
     {
         readResponse();
 
-        continents = new ObjectMapper().readValue(response.getEntity().toString(), new TypeReference<List<Continent>>() { });
+        continents = new ObjectMapper().readValue(response.getEntity().toString(), new TypeReference<List<ContinentDTO>>() { });
     }
 
 
-    public String update(String uri, Continent continent)
+    public String update(String uri, ContinentDTO continent)
     {
         try
         {

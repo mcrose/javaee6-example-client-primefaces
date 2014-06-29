@@ -36,7 +36,7 @@ import py.org.icarusdb.commons.exception.ActiveUserException;
 import py.org.icarusdb.commons.exception.ConfigException;
 import py.org.icarusdb.commons.exception.LoginFailedException;
 import py.org.icarusdb.commons.exception.RegisteredUserException;
-import py.org.icarusdb.example.model.Country;
+import py.org.icarusdb.example.model.CountryDTO;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +57,7 @@ public class CountryClientService extends ExampleClientService
     }
 
 
-    private List<Country> countries = null;
+    private List<CountryDTO> countries = null;
     
     
     /**
@@ -66,7 +66,7 @@ public class CountryClientService extends ExampleClientService
      * @param connectUri
      * @return
      */
-    public List<Country> getCountries(String connectUri)
+    public List<CountryDTO> getCountries(String connectUri)
     {
         return getCountries(connectUri, null);
     }
@@ -81,7 +81,7 @@ public class CountryClientService extends ExampleClientService
      * 
      * @return {@link Country} or empty list 
      */
-    public List<Country> getCountries(String connectUri, Properties parameters)
+    public List<CountryDTO> getCountries(String connectUri, Properties parameters)
     {
         try
         {
@@ -131,12 +131,12 @@ public class CountryClientService extends ExampleClientService
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new Hibernate4Module());
         
-        countries = (List<Country>) mapper.readValue(response.getEntity().toString(), new TypeReference<List<Country>>() { });
+        countries = (List<CountryDTO>) mapper.readValue(response.getEntity().toString(), new TypeReference<List<CountryDTO>>() { });
         
     }
 
 
-    public String save(String uri, Country country)
+    public String execute(String uri, CountryDTO country)
     {
         try
         {
@@ -148,7 +148,7 @@ public class CountryClientService extends ExampleClientService
             
             readResponse();
             
-            return "updated";
+            return "OK";
             
         }
         catch (JsonGenerationException e)

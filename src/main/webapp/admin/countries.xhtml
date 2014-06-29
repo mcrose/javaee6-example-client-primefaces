@@ -83,18 +83,20 @@
                            </p:cellEditor>
                         </p:column>
 
-                       <p:column headerText="#{bundle['label.continent']}" >
+                       <p:column width="200"
+                                 headerText="#{bundle['label.continent']}" > 
                            <p:cellEditor>
                                 <f:facet name="output">
-                                    <h:outputText value="#{_country.continent.name}" />
+                                    <h:outputText value="#{_country.continentDTO.name}" />
                                 </f:facet>
                                 <f:facet name="input">
                                     <p:selectOneMenu id="countryInput" immediate="true" styleClass="combobox" 
-                                                  value="#{countryController.selectedRow.continent}">
+                                                  value="#{_country.continentDTO}">
                                          <f:selectItem itemLabel="Select One" itemValue="" />
                                          <f:selectItems var="_activeContinent" value="#{comboBoxActiveContinents}"  
                                                   itemValue="#{_activeContinent}"
-                                                  itemLabel="#{_activeContinent.name}" /> 
+                                                  itemLabel="#{_activeContinent.name}" />
+                                         <p:ajax event="change" immediate="true" /> 
                                     </p:selectOneMenu>
                                 </f:facet>
                            </p:cellEditor>
@@ -131,6 +133,15 @@
                                                             target="#{countryController.selectedRow}" />
                             </p:commandLink>
                             <p:spacer width="10" />
+
+                            <p:commandLink id="removelink" immediate="true"
+                                     disabled="#{not _country.active}" update=":listform:collectionpanel"
+                                     rendered="#{countryController.showActivationButtons}" 
+                                        value="#{bundle['label.remove']}"
+                                       action="#{countryController.remove}" >
+                                <f:setPropertyActionListener value="#{_country}"
+                                                            target="#{countryController.selectedRow}" />
+                            </p:commandLink>
 
                             <p:rowEditor />
                         </p:column>

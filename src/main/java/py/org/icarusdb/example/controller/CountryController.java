@@ -34,7 +34,7 @@ import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
-import py.org.icarusdb.example.model.Country;
+import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.rest.client.CountryClientService;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
@@ -63,8 +63,8 @@ public class CountryController extends BaseController implements Serializable
 
     private CountryClientService service = null;
 
-    private List<Country> resultList = null;
-    private Country selectedRow = null;
+    private List<CountryDTO> resultList = null;
+    private CountryDTO selectedRow = null;
 //    private Continent selectedContinent = null;
     
     private String name = null;
@@ -95,8 +95,6 @@ public class CountryController extends BaseController implements Serializable
         
         serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameCountries");
         resultList = service.getCountries(serverUri);
-        
-        
     }
     
     private void initVarz()
@@ -109,12 +107,12 @@ public class CountryController extends BaseController implements Serializable
         name = null;
     }
     
-    public Country getSelectedRow()
+    public CountryDTO getSelectedRow()
     {
         return selectedRow ;
     }
 
-    public void setSelectedRow(Country selectedRow)
+    public void setSelectedRow(CountryDTO selectedRow)
     {
         this.selectedRow = selectedRow;
     }
@@ -139,7 +137,7 @@ public class CountryController extends BaseController implements Serializable
         this.name = name;
     }
     
-    public List<Country> getResultList()
+    public List<CountryDTO> getResultList()
     {
         return resultList;
     }
@@ -198,9 +196,7 @@ public class CountryController extends BaseController implements Serializable
         
         try
         {
-//            selectedRow.setContinent(selectedContinent);
-            
-            result = service.save(serverUri + getServiceSave(), selectedRow);
+            result = service.execute(serverUri + getServiceSave(), selectedRow);
         }
         catch (Exception e) 
         {
@@ -211,11 +207,12 @@ public class CountryController extends BaseController implements Serializable
         {
             if(result != null)
             {
-                summary = MessageUtil.retrieveMessage("label.record.updated");
+                summary = MessageUtil.retrieveMessage("action.result.removed");
                 selectedRow = null;
             }
             
             showActivationButtons = true;
+            search(null);
         }
     }
 
@@ -226,11 +223,11 @@ public class CountryController extends BaseController implements Serializable
     
     public void add()
     {
-        selectedRow = new Country();
+        selectedRow = new CountryDTO();
         selectedRow.setActive(true);
         
         if (resultList == null) {
-            resultList = new LinkedList<Country>();
+            resultList = new LinkedList<CountryDTO>();
         }
         
         resultList.add(selectedRow);
@@ -245,14 +242,14 @@ public class CountryController extends BaseController implements Serializable
     
     public void onRowEdit(RowEditEvent event)
     {
-        selectedRow = (Country) event.getObject();
+        selectedRow = (CountryDTO) event.getObject();
         save();
     }
     
     public void onRowCancel(RowEditEvent event)
     {
         showActivationButtons = true;
-        selectedRow = (Country) event.getObject();
+        selectedRow = (CountryDTO) event.getObject();
         
         String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
         MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
@@ -268,6 +265,32 @@ public class CountryController extends BaseController implements Serializable
     {
         selectedRow.setActive(false);
         save();
+    }
+    
+    public void remove()
+    {
+        String result = null;
+
+        try
+        {
+            result = service.execute(serverUri + "/remove", selectedRow);
+        }
+        catch (Exception e)
+        {
+            AppHelper.printException(e);
+            summary = "Error !";
+        }
+        finally
+        {
+            if (result != null)
+            {
+                summary = MessageUtil.retrieveMessage("action.result.updated");
+                selectedRow = null;
+            }
+
+            showActivationButtons = true;
+            search(null);
+        }
     }
     
     // TODO implement report 

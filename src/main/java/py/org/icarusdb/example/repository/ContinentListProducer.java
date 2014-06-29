@@ -29,10 +29,9 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
 import py.org.icarusdb.commons.util.UriBuilder;
-import py.org.icarusdb.example.model.Continent;
+import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
-import py.org.icarusdb.util.AppHelper;
 
 /**
  * @author Betto McRose [icarus]
@@ -46,8 +45,8 @@ public class ContinentListProducer
     private String serverUri = null;
     private ContinentClientService service = null;
 
-    private List<Continent> continents = null;
-    private List<Continent> activeContinents = null;
+    private List<ContinentDTO> continents = null;
+    private List<ContinentDTO> activeContinents = null;
 
 
     @PostConstruct
@@ -72,7 +71,7 @@ public class ContinentListProducer
     
     @Produces
     @Named
-    public List<Continent> getContinents()
+    public List<ContinentDTO> getContinentDTOs()
     {
         if(continents == null) {
             retrieveAllContinentsOrderedByName();
@@ -82,7 +81,7 @@ public class ContinentListProducer
 
     @Produces
     @Named
-    public List<Continent> getActiveContinents()
+    public List<ContinentDTO> getActiveContinents()
     {
         if(activeContinents == null) {
             retrieveAcTiveContinentsOrderedByName();
@@ -94,18 +93,18 @@ public class ContinentListProducer
     @Produces
     @Named
     @ComboBoxActiveContinents
-    public List<Continent> getComboBoxActiveContinents()
+    public List<ContinentDTO> getComboBoxActiveContinents()
     {
-        List<Continent> combobox = new LinkedList<Continent>();
-        Continent selectElement = new Continent();
-        selectElement.setName(AppHelper.getBundleMessage("label.selection.select"));
-        combobox.add(selectElement);
+        List<ContinentDTO> combobox = new LinkedList<ContinentDTO>();
+//        ContinentDTO selectElement = new ContinentDTO();
+//        selectElement.setName(AppHelper.getBundleMessage("label.selection.select"));
+//        combobox.add(selectElement);
         combobox.addAll(getActiveContinents());
         
         return combobox;
     }
     
-    public void onContinentListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Continent Continent)
+    public void onContinentDTOListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final ContinentDTO ContinentDTO)
     {
         retrieveAllContinentsOrderedByName();
     }

@@ -34,7 +34,7 @@ import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
-import py.org.icarusdb.example.model.Continent;
+import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
@@ -60,8 +60,8 @@ public class ContinentController extends BaseController implements Serializable
 
     private ContinentClientService service = null;
 
-    private List<Continent> resultList = null;
-    private Continent selectedRow = null;
+    private List<ContinentDTO> resultList = null;
+    private ContinentDTO selectedRow = null;
     
     private String name = null;
 
@@ -102,12 +102,12 @@ public class ContinentController extends BaseController implements Serializable
         name = null;
     }
     
-    public Continent getSelectedRow()
+    public ContinentDTO getSelectedRow()
     {
         return selectedRow ;
     }
 
-    public void setSelectedRow(Continent selectedRow)
+    public void setSelectedRow(ContinentDTO selectedRow)
     {
         this.selectedRow = selectedRow;
     }
@@ -122,7 +122,7 @@ public class ContinentController extends BaseController implements Serializable
         this.name = name;
     }
     
-    public List<Continent> getResultList()
+    public List<ContinentDTO> getResultList()
     {
         return resultList;
     }
@@ -196,11 +196,11 @@ public class ContinentController extends BaseController implements Serializable
     
     public void add()
     {
-        selectedRow = new Continent();
+        selectedRow = new ContinentDTO();
         selectedRow.setActive(true);
         
         if (resultList == null) {
-            resultList = new LinkedList<Continent>();
+            resultList = new LinkedList<ContinentDTO>();
         }
         
         resultList.add(selectedRow);
@@ -215,14 +215,14 @@ public class ContinentController extends BaseController implements Serializable
     
     public void onRowEdit(RowEditEvent event)
     {
-        selectedRow = (Continent) event.getObject();
+        selectedRow = (ContinentDTO) event.getObject();
         save();
     }
     
     public void onRowCancel(RowEditEvent event)
     {
         showActivationButtons = true;
-        selectedRow = (Continent) event.getObject();
+        selectedRow = (ContinentDTO) event.getObject();
         
         String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
         MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
