@@ -16,18 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.icarusdb.example.util.quialifiers;
+package py.org.icarusdb.util;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
+import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
+import org.primefaces.context.RequestContext;
 
 /**
  * @author Betto McRose [icarus]
@@ -35,9 +29,14 @@ import javax.inject.Qualifier;
  *         mcrose.dev@gmail.com
  *
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ TYPE, METHOD, FIELD, PARAMETER })
-@Qualifier
-public @interface ComboBoxActiveContinents
+@Named
+@RequestScoped
+public class AppContextHelper
 {
+
+    public void openDialog(String dlgName)
+    {
+        RequestContext.getCurrentInstance().openDialog(dlgName);
+    }
+    
 }

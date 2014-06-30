@@ -52,3 +52,7 @@
     ui-inputfield ui-inputtext ui-widget ui-state-default
     */
 }
+
+.noborder {
+    border: none;
+}
