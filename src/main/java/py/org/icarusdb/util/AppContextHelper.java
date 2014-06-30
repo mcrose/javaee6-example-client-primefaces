@@ -16,43 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package py.org.icarusdb.util;
 
+import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
 
-.combobox {
-    width: 200px !important;
-    text-align: left;
-}
+import org.primefaces.context.RequestContext;
 
-.numeric {
-    text-align: right;
-}
+/**
+ * @author Betto McRose [icarus]
+ *         mcrose@icarusdb.com.py
+ *         mcrose.dev@gmail.com
+ *
+ */
+@Named
+@RequestScoped
+public class AppContextHelper
+{
 
-.numeric {
-    text-align: right;
-}
-
-.outputTextBox {
-    text-align: left;
-    background: #ffffff;
-    padding-left: 5px;
-    padding-right: 10px;
-    color: #222222;
-    border-radius: 3px;
-    border-color: #778877;
-    box-shadow: inset 0 2px 2px #8f8f8f;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-box-shadow: inset 0 2px 2px #8f8f8f;
-    -webkit-box-shadow: inset 0 2px 2px #8f8f8f;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=  false);
-    line-height: 2;
-    vertical-align: bottom, text-bottom;
-    height: 20px;
-    /*
-    ui-inputfield ui-inputtext ui-widget ui-state-default
-    */
-}
-
-.noborder {
-    border: none;
+    public void openDialog(String dlgName)
+    {
+        RequestContext.getCurrentInstance().openDialog(dlgName);
+    }
+    
 }

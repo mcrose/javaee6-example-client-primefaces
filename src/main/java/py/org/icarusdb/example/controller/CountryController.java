@@ -28,12 +28,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import org.jboss.logging.Logger;
 import org.primefaces.component.celleditor.CellEditor;
 import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.rest.client.CountryClientService;
 import py.org.icarusdb.util.AppHelper;
@@ -51,7 +51,8 @@ import py.org.icarusdb.util.MessageUtil;
 //TODO add roles
 public class CountryController extends BaseController implements Serializable
 {
-    private static final Logger LOGGER = Logger.getLogger(CountryController.class);
+    //TODO implement logging
+//    private static final Logger LOGGER = Logger.getLogger(CountryController.class);
     
     
 //    @Inject 
@@ -65,11 +66,11 @@ public class CountryController extends BaseController implements Serializable
 
     private List<CountryDTO> resultList = null;
     private CountryDTO selectedRow = null;
-//    private Continent selectedContinent = null;
+    private ContinentDTO selectedContinent = null;
     
     private String name = null;
 
-    private String serviceLookupByName = null;
+//    private String serviceLookupByName = null;
     private String serviceNameSave = null;
 
     private boolean showActivationButtons = true;
@@ -100,8 +101,8 @@ public class CountryController extends BaseController implements Serializable
     private void initVarz()
     {
         resultList = null;
-        selectedRow = null;
-//        selectedContinent = null;
+        selectedRow = new CountryDTO();
+        selectedContinent = null;
         
         summary = null; 
         name = null;
@@ -117,15 +118,15 @@ public class CountryController extends BaseController implements Serializable
         this.selectedRow = selectedRow;
     }
     
-//    public Continent getSelectedContinent()
-//    {
-//        return selectedContinent;
-//    }
-//    
-//    public void setSelectedContinent(Continent selectedContinent)
-//    {
-//        this.selectedContinent = selectedContinent;
-//    }
+    public ContinentDTO getSelectedContinent()
+    {
+        return selectedContinent;
+    }
+    
+    public void setSelectedContinent(ContinentDTO selectedContinent)
+    {
+        this.selectedContinent = selectedContinent;
+    }
 
     public String getName()
     {
@@ -142,14 +143,14 @@ public class CountryController extends BaseController implements Serializable
         return resultList;
     }
     
-    private String getServiceLookupByName()
-    {
-        if (serviceLookupByName == null)
-        {
-            serviceLookupByName = service.getConnInfo("serviceNameFindByName"); 
-        }
-        return serviceLookupByName ;
-    }
+//    private String getServiceLookupByName()
+//    {
+//        if (serviceLookupByName == null)
+//        {
+//            serviceLookupByName = service.getConnInfo("serviceNameFindByName"); 
+//        }
+//        return serviceLookupByName ;
+//    }
     
     private String getServiceSave()
     {
@@ -160,6 +161,15 @@ public class CountryController extends BaseController implements Serializable
         return serviceNameSave ;
     }
 
+//    private String getServiceLookupByParams()
+//    {
+//        if (serviceLookupByName == null)
+//        {
+//            serviceLookupByName = service.getConnInfo("serviceNameFindByParams"); 
+//        }
+//        return serviceLookupByName ;
+//    }
+    
     
 
     public boolean isShowActivationButtons()
@@ -176,7 +186,7 @@ public class CountryController extends BaseController implements Serializable
     
     public void search(ActionEvent actionEvent)
     {
-        if(name == null || name.isEmpty()) 
+        if(selectedContinent == null && (name == null || name.isEmpty()))  
         {
             resultList = service.getCountries(serverUri);
         }
@@ -184,8 +194,9 @@ public class CountryController extends BaseController implements Serializable
         {
             Properties parameters = new IDBProperties();
             parameters.put("name", name);
+            parameters.put("continent", selectedContinent.getId());
             
-            resultList = service.getCountries(serverUri + getServiceLookupByName(), parameters);
+            resultList = service.getCountries(serverUri + "/search", parameters);
         }
         
     }
@@ -311,5 +322,4 @@ public class CountryController extends BaseController implements Serializable
     }
     
 
-    
 }
