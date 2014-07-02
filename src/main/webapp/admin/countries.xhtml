@@ -58,8 +58,9 @@
                                               value="#{bundle['button.label.print']}" 
                                      actionListener="#{countryController.print}" />
                                 <p:spacer width="10px"/>
-                                    <p:commandButton id="add" update=":listform:collectionpanel" 
-                                                  value="#{bundle['label.add']}"
+                                    <p:commandButton id="add" value="#{bundle['label.add']}"
+                                                 update=":country-edit-form:display" 
+                                             oncomplete="PF('editionPanelDialog').show()"
                                          actionListener="#{countryController.add}" />
                             </h:panelGroup>
                         </div>
@@ -127,7 +128,6 @@
 
                             <p:commandLink id="activatelink" immediate="true" 
                                      disabled="#{_country.active}" update=":listform:collectionpanel"
-                                     rendered="#{countryController.showActivationButtons}"
                                         value="#{bundle['button.label.activate']}"
                                        action="#{countryController.activate}" >
                                 <f:setPropertyActionListener value="#{_country}"
@@ -138,7 +138,6 @@
                             
                             <p:commandLink id="inactivatelink" immediate="true"
                                      disabled="#{not _country.active}" update=":listform:collectionpanel"
-                                     rendered="#{countryController.showActivationButtons}" 
                                         value="#{bundle['button.label.inactivate']}"
                                        action="#{countryController.inactivate}" >
                                 <f:setPropertyActionListener value="#{_country}"
@@ -148,7 +147,6 @@
 
                             <p:commandLink id="removelink" immediate="true"
                                      disabled="#{not _country.active}" update=":listform:collectionpanel"
-                                     rendered="#{countryController.showActivationButtons}" 
                                         value="#{bundle['label.remove']}"
                                        action="#{countryController.remove}" >
                                 <f:setPropertyActionListener value="#{_country}"

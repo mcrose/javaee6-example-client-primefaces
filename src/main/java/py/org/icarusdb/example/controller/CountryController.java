@@ -19,7 +19,6 @@
 package py.org.icarusdb.example.controller;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,9 +27,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-
-import org.primefaces.component.celleditor.CellEditor;
-import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
@@ -77,7 +73,6 @@ public class CountryController extends BaseController implements Serializable
 //    private String serviceLookupByName = null;
     private String serviceNameSave = null;
 
-    private boolean showActivationButtons = true;
     
     
     @PostConstruct
@@ -176,11 +171,6 @@ public class CountryController extends BaseController implements Serializable
     
     
 
-    public boolean isShowActivationButtons()
-    {
-        return showActivationButtons;
-    }
-    
     public boolean isPrintable()
     {
         return (resultList != null) && (!resultList.isEmpty());
@@ -228,7 +218,6 @@ public class CountryController extends BaseController implements Serializable
                 selectedRow = null;
             }
             
-            showActivationButtons = true;
             search(null);
         }
         
@@ -244,14 +233,6 @@ public class CountryController extends BaseController implements Serializable
     {
         selectedRow = new CountryDTO();
         selectedRow.setActive(true);
-        
-        if (resultList == null) {
-            resultList = new LinkedList<CountryDTO>();
-        }
-        
-        resultList.add(selectedRow);
-        
-        showActivationButtons = false;
     }
     
     public void updateContinentInfo()
@@ -259,10 +240,10 @@ public class CountryController extends BaseController implements Serializable
         selectedContinent = CollectionHelper.getContinent(activeContinents, selectedRow.getContinentDTO());
     }
     
-    public void onCellEdit(CellEditor editor)
-    {
-        showActivationButtons = !showActivationButtons;
-    }
+//    public void onCellEdit(CellEditor editor)
+//    {
+//        showActivationButtons = !showActivationButtons;
+//    }
     
 //    public void onRowEdit(RowEditEvent event)
 //    {
@@ -313,7 +294,7 @@ public class CountryController extends BaseController implements Serializable
                 selectedRow = null;
             }
 
-            showActivationButtons = true;
+//            showActivationButtons = true;
             search(null);
         }
     }
