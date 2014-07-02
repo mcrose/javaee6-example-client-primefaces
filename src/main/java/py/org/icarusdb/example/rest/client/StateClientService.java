@@ -138,13 +138,13 @@ public class StateClientService extends ExampleClientService
     }
 
 
-    public String execute(String uri, StateDTO country)
+    public String execute(String uri, StateDTO entity)
     {
         try
         {
             createConnection(uri);
             
-            request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(country));
+            request.body(MediaType.APPLICATION_JSON, new ObjectMapper().writeValueAsString(entity));
             
             response = request.post(String.class);
             

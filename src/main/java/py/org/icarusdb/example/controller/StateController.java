@@ -30,10 +30,12 @@ import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.model.StateDTO;
 import py.org.icarusdb.example.rest.client.StateClientService;
 import py.org.icarusdb.example.util.CollectionHelper;
+import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
@@ -58,6 +60,10 @@ public class StateController extends BaseController implements Serializable
 //    private ContextHelper contextHelper;
     
     @Inject
+    @ComboBoxActiveContinents
+    List<ContinentDTO> activeContinents;
+
+    @Inject
     @ComboBoxActiveCountries
     List<CountryDTO> activeCountries;
     
@@ -67,6 +73,9 @@ public class StateController extends BaseController implements Serializable
     private List<StateDTO> resultList = null;
     private StateDTO selectedRow = null;
     private CountryDTO selectedCountry = null;
+    private ContinentDTO selectedContinent = null;
+    
+    private List<CountryDTO> filteredCountries = null;
     
     private String name = null;
 
@@ -102,6 +111,7 @@ public class StateController extends BaseController implements Serializable
         resultList = null;
         selectedRow = new StateDTO();
         selectedCountry = null;
+        selectedContinent = null;
         
         summary = null; 
         name = null;
@@ -126,6 +136,16 @@ public class StateController extends BaseController implements Serializable
     {
         this.selectedCountry = selectedCountry;
     }
+    
+    public ContinentDTO getSelectedContinent()
+    {
+        return selectedContinent;
+    }
+    
+    public void setSelectedContinent(ContinentDTO selectedContinent)
+    {
+        this.selectedContinent = selectedContinent;
+    }
 
     public String getName()
     {
@@ -140,6 +160,11 @@ public class StateController extends BaseController implements Serializable
     public List<StateDTO> getResultList()
     {
         return resultList;
+    }
+    
+    public List<CountryDTO> getFilteredCountries()
+    {
+        return filteredCountries;
     }
     
 //    private String getServiceLookupByName()
@@ -180,15 +205,23 @@ public class StateController extends BaseController implements Serializable
     
     public void search(ActionEvent actionEvent)
     {
-        if(selectedCountry == null && (name == null || name.isEmpty()))  
+        if((selectedContinent == null) && (selectedCountry == null) 
+                && (name == null || name.isEmpty()) )  
         {
             resultList = service.getStates(serverUri);
         }
         else
         {
             Properties parameters = new IDBProperties();
+            
+            if (selectedCountry != null) {
+                parameters.put("country", selectedCountry.getId());
+            }
+            if (selectedContinent != null) {
+                parameters.put("continent", selectedContinent.getId());
+            }
+            
             parameters.put("name", name);
-            parameters.put("country", selectedCountry.getId());
             
             resultList = service.getStates(serverUri + "/search", parameters);
         }
@@ -235,32 +268,23 @@ public class StateController extends BaseController implements Serializable
         selectedRow.setActive(true);
     }
     
-    public void updateCountryInfo()
+    public void updateCollectionsInfo()
     {
         selectedCountry = CollectionHelper.getCountry(activeCountries, selectedRow.getCountryDTO());
+        selectedContinent = CollectionHelper.getContinent(activeContinents, selectedCountry.getContinentDTO());
+//        updateContinentInfo();
+        updateCountries();
     }
     
-//    public void onCellEdit(CellEditor editor)
+//    public void updateContinentInfo()
 //    {
-//        showActivationButtons = !showActivationButtons;
 //    }
+//    
+    public void updateCountries()
+    {
+        filteredCountries = CollectionHelper.getCountriesByContinent(activeCountries, selectedContinent);
+    }
     
-//    public void onRowEdit(RowEditEvent event)
-//    {
-//        selectedRow = (StateDTO) event.getObject();
-//        selectedRow.setCountryDTO(selectedCountry);
-//        save();
-//    }
-    
-//    public void onRowCancel(RowEditEvent event)
-//    {
-//        showActivationButtons = true;
-//        selectedRow = (StateDTO) event.getObject();
-//        
-//        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
-//        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
-//    }
-
     public void activate()
     {
         selectedRow.setActive(true);
@@ -294,7 +318,6 @@ public class StateController extends BaseController implements Serializable
                 selectedRow = null;
             }
 
-//            showActivationButtons = true;
             search(null);
         }
     }

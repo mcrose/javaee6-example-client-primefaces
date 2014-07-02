@@ -18,6 +18,7 @@
  */
 package py.org.icarusdb.example.util;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import py.org.icarusdb.example.model.ContinentDTO;
@@ -60,6 +61,23 @@ public class CollectionHelper
             }
         }
         return null;
+    }
+
+    public static List<CountryDTO> getCountriesByContinent(List<CountryDTO> activeCountries, ContinentDTO continentDTO)
+    {
+        if (continentDTO == null) return null;
+        
+        List<CountryDTO> filtered = new LinkedList<CountryDTO>();
+        
+        for(CountryDTO dto : activeCountries)
+        {
+            if (continentDTO.getId().longValue() == dto.getContinentDTO().getId().longValue())
+            {
+                filtered.add(dto);
+            }
+        }
+        
+        return filtered;
     }
 
 
