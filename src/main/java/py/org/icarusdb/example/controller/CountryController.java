@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 
 import org.primefaces.component.celleditor.CellEditor;
 import org.primefaces.event.RowEditEvent;
@@ -36,6 +37,8 @@ import py.org.icarusdb.commons.util.UriBuilder;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.rest.client.CountryClientService;
+import py.org.icarusdb.example.util.CollectionHelper;
+import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
@@ -58,8 +61,9 @@ public class CountryController extends BaseController implements Serializable
 //    @Inject 
 //    private ContextHelper contextHelper;
     
-//    @Inject
-//    ComboBoxActiveContinents activeContinents;
+    @Inject
+    @ComboBoxActiveContinents
+    List<ContinentDTO> activeContinents;
     
 
     private CountryClientService service = null;
@@ -201,12 +205,14 @@ public class CountryController extends BaseController implements Serializable
         
     }
 
-    public void save()
+    public String save()
     {
         String result = null;
         
         try
         {
+            selectedRow.setContinentDTO(selectedContinent);
+            
             result = service.execute(serverUri + getServiceSave(), selectedRow);
         }
         catch (Exception e) 
@@ -225,6 +231,8 @@ public class CountryController extends BaseController implements Serializable
             showActivationButtons = true;
             search(null);
         }
+        
+        return null;
     }
 
     public void clear()
@@ -246,25 +254,31 @@ public class CountryController extends BaseController implements Serializable
         showActivationButtons = false;
     }
     
+    public void updateContinentInfo()
+    {
+        selectedContinent = CollectionHelper.getContinent(activeContinents, selectedRow.getContinentDTO());
+    }
+    
     public void onCellEdit(CellEditor editor)
     {
         showActivationButtons = !showActivationButtons;
     }
     
-    public void onRowEdit(RowEditEvent event)
-    {
-        selectedRow = (CountryDTO) event.getObject();
-        save();
-    }
+//    public void onRowEdit(RowEditEvent event)
+//    {
+//        selectedRow = (CountryDTO) event.getObject();
+//        selectedRow.setContinentDTO(selectedContinent);
+//        save();
+//    }
     
-    public void onRowCancel(RowEditEvent event)
-    {
-        showActivationButtons = true;
-        selectedRow = (CountryDTO) event.getObject();
-        
-        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
-        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
-    }
+//    public void onRowCancel(RowEditEvent event)
+//    {
+//        showActivationButtons = true;
+//        selectedRow = (CountryDTO) event.getObject();
+//        
+//        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
+//        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
+//    }
 
     public void activate()
     {

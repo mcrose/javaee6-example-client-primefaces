@@ -115,10 +115,11 @@
                         <p:column width="150" 
                              headerText="#{bundle['label.actions']}">
                         
-                            <p:commandLink id="viewlink" immediate="true" 
+                            <p:commandLink id="viewlink"  
                                        update=":country-edit-form:display" 
                                    oncomplete="PF('editionPanelDialog').show()"
-                                        value="#{bundle['label.view']}" >
+                                        value="#{bundle['label.view']}"
+                                       action="#{countryController.updateContinentInfo}" >
                                 <f:setPropertyActionListener value="#{_country}"
                                                             target="#{countryController.selectedRow}" />
                             </p:commandLink>
@@ -176,7 +177,7 @@
                             <h:outputLabel for="name" 
                                          value="#{bundle['label.continent']}" />
                             <p:selectOneMenu id="contienent"  
-                                          value="#{countryController.selectedRow.continentDTO}">
+                                          value="#{countryController.selectedContinent}">
                                  <f:selectItem itemLabel="Select One" itemValue="" />
                                  <f:selectItems var="_activeContinent" value="#{comboBoxActiveContinents}"  
                                           itemValue="#{_activeContinent}"
@@ -192,7 +193,7 @@
                             <h:outputLabel for="isActive"
                                          value="#{bundle['label.isActive']}" />
                             <p:selectBooleanCheckbox id="isActive" 
-                                         value="#{_countryController.selectedRow.active}" />
+                                         value="#{countryController.selectedRow.active}" />
                         
                         </h:panelGrid>
                         
