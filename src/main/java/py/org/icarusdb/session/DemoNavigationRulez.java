@@ -50,5 +50,15 @@ public class DemoNavigationRulez extends NavigationRulez
         return "/admin/states.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
     }
     
+    public String goCities()
+    {
+        return "/admin/cities.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
+    }
+    
+    public String goCityEdit()
+    {
+        return "/admin/city.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
+    }
+    
     
 }

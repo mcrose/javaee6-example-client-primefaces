@@ -18,20 +18,23 @@
  */
 package py.org.icarusdb.example.model;
 
-
 /**
  * @author Betto McRose [icarus]
  *         mcrose@icarusdb.com.py
  *         mcrose.dev@gmail.com
  *
  */
-public class StateDTO 
+public class CityDTO
 {
     private Long id;
-    private CountryDTO countryDTO;
+    private StateDTO stateDTO;
     private String name;
     private Boolean active;
-//    private Set<CityDTO> cities = new HashSet<CityDTO>(0);
+//    private Set<Neighborhood> neighborhoods = new HashSet<Neighborhood>(0);
+
+    public CityDTO()
+    {
+    }
 
     public Long getId()
     {
@@ -43,14 +46,14 @@ public class StateDTO
         this.id = id;
     }
 
-    public CountryDTO getCountryDTO()
+    public StateDTO getStateDTO()
     {
-        return this.countryDTO;
+        return this.stateDTO;
     }
 
-    public void setCountryDTO(CountryDTO country)
+    public void setStateDTO(StateDTO state)
     {
-        this.countryDTO = country;
+        this.stateDTO = state;
     }
 
     public String getName()
@@ -73,14 +76,14 @@ public class StateDTO
         this.active = active;
     }
 
-//    public Set<CityDTO> getCities()
+//    public Set<Neighborhood> getNeighborhoods()
 //    {
-//        return this.cities;
+//        return this.neighborhoods;
 //    }
 //
-//    public void setCities(Set<CityDTO> citieses)
+//    public void setNeighborhoods(Set<Neighborhood> neighborhoodses)
 //    {
-//        this.cities = citieses;
+//        this.neighborhoods = neighborhoodses;
 //    }
 
 }

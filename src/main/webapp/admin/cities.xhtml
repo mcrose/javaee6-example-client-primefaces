@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/templates/dashboard.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="content" > 
+        
+            <h:form id="listform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px;" 
+                     header="#{bundle['label.cities']}">
+                         
+                    <p:focus />
+                    <h:panelGrid id="datapanelg" columns="2" >
+                        
+                        <h:outputLabel for="continent" style="width: 115px; "
+                                     value="#{bundle['label.continent']}" />
+                        <p:selectOneMenu id="continent"  
+                                      value="#{cityController.selectedContinent}">
+                             <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                             <f:selectItems var="_activeContinent" value="#{comboBoxActiveContinents}"  
+                                      itemValue="#{_activeContinent}"
+                                      itemLabel="#{_activeContinent.name}" />
+                             <p:ajax event="change" update="country" 
+                                  listener="#{cityController.updateCountries}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="country" style="width: 115px; "
+                                     value="#{bundle['label.country']}" />
+                        <p:selectOneMenu id="country"  
+                                      value="#{cityController.selectedCountry}">
+                             <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                             <f:selectItems var="_activeCountry" value="#{cityController.filteredCountries}"  
+                                      itemValue="#{_activeCountry}"
+                                      itemLabel="#{_activeCountry.name}" />
+                             <p:ajax event="change" update="state" 
+                                  listener="#{cityController.updateStates}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="state" style="width: 115px; "
+                                     value="#{bundle['label.state']}" />
+                        <p:selectOneMenu id="state"  
+                                      value="#{cityController.selectedState}">
+                             <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                             <f:selectItems var="_activeState" value="#{cityController.filteredStates}"  
+                                      itemValue="#{_activeState}"
+                                      itemLabel="#{_activeState.name}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="name" style="width: 115px; "
+                                     value="#{bundle['label.city.name']}" />
+                        <p:inputText id="name" size="40"  
+                                  value="#{cityController.name}" />
+                        
+                        <div style="clear: left;"/>
+                        <p:spacer height="10px" />
+                        
+                        <div align="right" >
+                            <h:panelGroup >
+                                <p:commandButton id="clearbutton" icon="ui-icon-close" 
+                                             update=":listform"
+                                              value="#{bundle['button.label.clear']}" 
+                                     actionListener="#{cityController.clear}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="searchbutton" icon="ui-icon-search" 
+                                             update="collectionpanel printbutton" 
+                                              value="#{bundle['search.label.lookup']}" 
+                                     actionListener="#{cityController.search}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="printbutton" icon="ui-icon-print" 
+                                             update=":listform:processbutton" ajax="false"
+                                           disabled="#{not cityController.printable}"
+                                              value="#{bundle['button.label.print']}" 
+                                     actionListener="#{cityController.print}" />
+                                <p:spacer width="10px"/>
+                                    <p:commandButton id="add" value="#{bundle['label.add']}"
+                                         actionListener="#{cityController.selectAction(actionNewCity)}"
+                                                 action="#{navigationRulez.goCityEdit}" />
+                            </h:panelGroup>
+                        </div>
+                    </h:panelGrid>
+                    
+                </p:panel>
+                <br />
+                <p:panel id="collectionpanel" style="min-height: 50px; " 
+                     header="#{bundle['label.cities']}" toggleable="true">
+                     
+                    <p:dataTable id="datatablecollection" 
+                                var="_city" rowIndexVar="_indexVar"
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="200"
+                           rendered="#{not empty cityController.resultList}"
+                              value="#{cityController.resultList}" 
+                       emptyMessage="#{bundle['search.label.noRecordsFound']}">
+                        
+                       <p:column width="100"
+                                 headerText="#{bundle['label.name']}" > 
+                            <h:outputText value="#{_city.name}" />
+                        </p:column>
+
+                       <p:column width="100"
+                                 headerText="#{bundle['label.state']}" > 
+                            <h:outputText value="#{_city.stateDTO.countryDTO.name}" />
+                        </p:column>
+
+                       <p:column width="100"
+                                 headerText="#{bundle['label.country']}" > 
+                            <h:outputText value="#{_city.stateDTO.countryDTO.name}" />
+                        </p:column>
+
+                       <p:column width="100"
+                                 headerText="#{bundle['label.continent']}" > 
+                            <h:outputText value="#{_city.stateDTO.countryDTO.continentDTO.name}" />
+                        </p:column>
+
+                        <p:column width="70"   
+                             headerText="#{bundle['label.isActive']}">
+                            <div align="center">
+                                <p:selectBooleanCheckbox disabled="true" 
+                                             value="#{_city.active}" />
+                            </div>
+                        </p:column>
+ 
+                        <p:column width="150" 
+                             headerText="#{bundle['label.actions']}">
+                        
+                            <p:commandLink id="viewlink"  
+                                       update=":city-edit-form:display" 
+                                   oncomplete="PF('editionPanelDialog').show()"
+                                        value="#{bundle['label.view']}"
+                                       action="#{cityController.updateCollectionsInfo}" >
+                                <f:setPropertyActionListener value="#{_city}"
+                                                            target="#{cityController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            <p:commandLink id="activatelink" immediate="true" 
+                                     disabled="#{_city.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['button.label.activate']}"
+                                       action="#{cityController.activate}" >
+                                <f:setPropertyActionListener value="#{_city}"
+                                                            target="#{cityController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            
+                            <p:commandLink id="inactivatelink" immediate="true"
+                                     disabled="#{not _city.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['button.label.inactivate']}"
+                                       action="#{cityController.inactivate}" >
+                                <f:setPropertyActionListener value="#{_city}"
+                                                            target="#{cityController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            <p:commandLink id="removelink" immediate="true"
+                                     disabled="#{not _city.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['label.remove']}"
+                                       action="#{cityController.remove}" >
+                                <f:setPropertyActionListener value="#{_city}"
+                                                            target="#{cityController.selectedRow}" />
+                                <p:confirm header="#{bundle['label.confirm']}" 
+                                          message="#{bundle['label.confirm.delete']}"
+                                             icon="ui-icon-alert"/>
+                            </p:commandLink>
+
+                        </p:column>
+                                                    
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+            </h:form>
+
+            <p:dialog id="editionPanelDlg" widgetVar="editionPanelDialog"
+                  header="#{bundle['label.edit']}: #{bundle['label.city']}" 
+                   modal="true" resizable="false" 
+              showEffect="fade" hideEffect="explode" 
+                minWidth="800" minHeight="500" >
+                
+                <h:form id="city-edit-form" >
+                    <p:panel id="display" >
+                        <h:panelGrid columns="2">
+
+                            <h:outputLabel for="continent" style="width: 70px; " 
+                                         value="#{bundle['label.continent']}" />
+                            <p:selectOneMenu id="continent"  
+                                          value="#{cityController.selectedContinent}">
+                                 <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                                 <f:selectItems var="_activeContinent" value="#{comboBoxActiveContinents}"  
+                                          itemValue="#{_activeContinent}"
+                                          itemLabel="#{_activeContinent.name}" />
+                                 <p:ajax event="change" update="country" 
+                                      listener="#{cityController.updateCountries}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="country" style="width: 70px; " 
+                                         value="#{bundle['label.country']}" />
+                            <p:selectOneMenu id="country"  
+                                          value="#{cityController.selectedCountry}">
+                                 <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                                 <f:selectItems var="_activeCountry" value="#{cityController.filteredCountries}"  
+                                          itemValue="#{_activeCountry}"
+                                          itemLabel="#{_activeCountry.name}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="state" style="width: 70px; "
+                                         value="#{bundle['label.state']}" />
+                            <p:selectOneMenu id="state"  
+                                          value="#{cityController.selectedState}">
+                                 <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                                 <f:selectItems var="_activeState" value="#{cityController.filteredStates}"  
+                                          itemValue="#{_activeState}"
+                                          itemLabel="#{_activeState.name}" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="name" style="width: 70px; " 
+                                         value="#{bundle['label.city.name']}" />
+                            <p:inputText id="name" size="35"  
+                                      value="#{cityController.selectedRow.name}" />
+                        
+                            <h:outputLabel for="isActive" style="width: 70px; "
+                                         value="#{bundle['label.isActive']}" />
+                            <p:selectBooleanCheckbox id="isActive" 
+                                         value="#{cityController.selectedRow.active}" />
+                        
+                        </h:panelGrid>
+                        
+                        <p:spacer height="10px" />
+                        <div id="action-buttons" align="center">
+                        
+                            <p:commandButton id="cancellbutton" 
+                                          value="#{bundle['button.label.cancel']}" 
+                                        onclick="PF('editionPanelDialog').hide()" />
+                            <p:spacer width="10" />
+
+                            <p:commandButton id="savebutton" 
+                                          value="#{bundle['button.label.save']}" 
+                                         action="#{cityController.save}"
+                                     oncomplete="PF('editionPanelDialog').hide()"
+                                         update=":listform:collectionpanel" />
+                        </div>                        
+                                            
+                    </p:panel>
+                </h:form>
+                
+            </p:dialog>
+                        
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>

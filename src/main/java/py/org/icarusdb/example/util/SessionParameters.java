@@ -70,4 +70,21 @@ public class SessionParameters extends GlobalParameters
     }
     
     
+    //_City
+    public final static String ACTION_MENU_CITY = "cityAction";
+    public final static String ACTION_NEW_CITY = "newcity";
+    public final static String ACTION_EDIT_CITY = "editcity";
+    
+    @Produces @Named final String getActionNewCity()
+    {
+        return ACTION_NEW_CITY;
+    }
+    
+    @Produces @Named final String getActionEditCity()
+    {
+        return ACTION_EDIT_CITY;
+    }
+    
+    
+    
 }

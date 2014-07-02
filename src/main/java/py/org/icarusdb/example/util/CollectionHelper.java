@@ -23,6 +23,7 @@ import java.util.List;
 
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
+import py.org.icarusdb.example.model.StateDTO;
 
 /**
  * @author Betto McRose [icarus]
@@ -72,6 +73,37 @@ public class CollectionHelper
         for(CountryDTO dto : activeCountries)
         {
             if (continentDTO.getId().longValue() == dto.getContinentDTO().getId().longValue())
+            {
+                filtered.add(dto);
+            }
+        }
+        
+        return filtered;
+    }
+
+    public static StateDTO getState(List<StateDTO> activeStates, StateDTO stateDTO)
+    {
+        if (stateDTO == null) return null;
+        
+        for(StateDTO dto : activeStates)
+        {
+            if (stateDTO.getId().longValue() == dto.getId().longValue())
+            {
+                return dto;
+            }
+        }
+        return null;
+    }
+
+    public static List<StateDTO> getStatesByCountry(List<StateDTO> activeStates, CountryDTO countryDTO)
+    {
+        if (countryDTO == null) return null;
+        
+        List<StateDTO> filtered = new LinkedList<StateDTO>();
+        
+        for(StateDTO dto : activeStates)
+        {
+            if (countryDTO.getId().longValue() == dto.getCountryDTO().getId().longValue())
             {
                 filtered.add(dto);
             }

@@ -20,26 +20,29 @@ package py.org.icarusdb.example.controller;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
-import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.model.CityDTO;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.model.StateDTO;
-import py.org.icarusdb.example.rest.client.StateClientService;
+import py.org.icarusdb.example.rest.client.CityClientService;
 import py.org.icarusdb.example.util.CollectionHelper;
+import py.org.icarusdb.example.util.SessionParameters;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
+import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveStates;
+import py.org.icarusdb.session.ContextHelper;
+import py.org.icarusdb.session.DemoNavigationRulez;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
+import py.org.icarusdb.util.NavigationRulezHelper;
 
 /**
  * @author Betto McRose [icarus]
@@ -50,10 +53,10 @@ import py.org.icarusdb.util.MessageUtil;
 @ManagedBean
 @ViewScoped
 //TODO add roles
-public class StateController extends BaseController implements Serializable
+public class CityEditController extends BaseController implements Serializable
 {
     //TODO implement logging
-//    private static final Logger LOGGER = Logger.getLogger(StateController.class);
+//    private static final Logger LOGGER = Logger.getLogger(CityController.class);
     
     @Inject
     @ComboBoxActiveContinents
@@ -63,19 +66,28 @@ public class StateController extends BaseController implements Serializable
     @ComboBoxActiveCountries
     List<CountryDTO> activeCountries;
     
+    @Inject
+    @ComboBoxActiveStates
+    List<StateDTO> activeStates;
 
-    private StateClientService service = null;
+    @Inject
+    DemoNavigationRulez navigationRulez;
 
-    private List<StateDTO> resultList = null;
-    private StateDTO selectedRow = null;
+    @Inject 
+    ContextHelper contextHelper;
+    
+    private CityClientService service = null;
+
+    private CityDTO selectedRow = null;
+    private StateDTO selectedState = null;
     private CountryDTO selectedCountry = null;
     private ContinentDTO selectedContinent = null;
     
+    private List<StateDTO> filteredStates = null;
     private List<CountryDTO> filteredCountries = null;
     
     private String name = null;
 
-//    private String serviceLookupByName = null;
     private String serviceNameSave = null;
 
     
@@ -83,9 +95,16 @@ public class StateController extends BaseController implements Serializable
     @PostConstruct
     public void init()
     {
-        // TODO add navigation control
-
-        service = new StateClientService();
+        if(!contextHelper.containsMenuAction(SessionParameters.ACTION_MENU_CITY))
+        {
+            MessageUtil.addFacesMessageError("error.action.noActionDefined");
+            NavigationRulezHelper.redirect(AppHelper.getDomainUrl() + "/home.jsf");
+            return;
+        }
+        
+        initVarz();
+        
+        service = new CityClientService();
         try
         {
             service.loadConfig();
@@ -96,31 +115,59 @@ public class StateController extends BaseController implements Serializable
             // TODO test if they are displayed
         }
         
-        initVarz();
+        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameCities");
         
-        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameStates");
-        resultList = service.getStates(serverUri);
+        action = contextHelper.getSelectedAction();
+        if(action.equalsIgnoreCase(SessionParameters.ACTION_NEW_CITY)) 
+        {
+            selectedRow = new CityDTO();
+            actionSubTitle = AppHelper.getBundleMessage("label.add");
+        }
+        else
+        {
+            Serializable entityId = (Serializable) contextHelper.getSelectedEntityId();
+            selectedRow = service.getCity(serverUri, entityId);
+            actionSubTitle = AppHelper.getBundleMessage("label.update");
+            
+            updateCollectionsInfo();
+            
+        }
+        
+        //contextHelper.clearAction(); TODO uncomment when finish debug
+
     }
     
     private void initVarz()
     {
-        resultList = null;
-        selectedRow = new StateDTO();
+        selectedState = null;
         selectedCountry = null;
         selectedContinent = null;
+        
+        filteredCountries = null;
+        filteredStates = null;
         
         summary = null; 
         name = null;
     }
     
-    public StateDTO getSelectedRow()
+    public CityDTO getSelectedRow()
     {
         return selectedRow ;
     }
 
-    public void setSelectedRow(StateDTO selectedRow)
+    public void setSelectedRow(CityDTO selectedRow)
     {
         this.selectedRow = selectedRow;
+    }
+    
+    public StateDTO getSelectedState()
+    {
+        return selectedState;
+    }
+    
+    public void setSelectedState(StateDTO selectedState)
+    {
+        this.selectedState = selectedState;
     }
     
     public CountryDTO getSelectedCountry()
@@ -153,24 +200,15 @@ public class StateController extends BaseController implements Serializable
         this.name = name;
     }
     
-    public List<StateDTO> getResultList()
-    {
-        return resultList;
-    }
-    
     public List<CountryDTO> getFilteredCountries()
     {
         return filteredCountries;
     }
     
-//    private String getServiceLookupByName()
-//    {
-//        if (serviceLookupByName == null)
-//        {
-//            serviceLookupByName = service.getConnInfo("serviceNameFindByName"); 
-//        }
-//        return serviceLookupByName ;
-//    }
+    public List<StateDTO> getFilteredStates()
+    {
+        return filteredStates;
+    }
     
     private String getServiceSave()
     {
@@ -181,58 +219,17 @@ public class StateController extends BaseController implements Serializable
         return serviceNameSave ;
     }
 
-//    private String getServiceLookupByParams()
-//    {
-//        if (serviceLookupByName == null)
-//        {
-//            serviceLookupByName = service.getConnInfo("serviceNameFindByParams"); 
-//        }
-//        return serviceLookupByName ;
-//    }
     
-    
-
-    public boolean isPrintable()
-    {
-        return (resultList != null) && (!resultList.isEmpty());
-    }
-
-    
-    
-    public void search(ActionEvent actionEvent)
-    {
-        if((selectedContinent == null) && (selectedCountry == null) 
-                && (name == null || name.isEmpty()) )  
-        {
-            resultList = service.getStates(serverUri);
-        }
-        else
-        {
-            Properties parameters = new IDBProperties();
-            
-            if (selectedCountry != null) {
-                parameters.put("country", selectedCountry.getId());
-            }
-            if (selectedContinent != null) {
-                parameters.put("continent", selectedContinent.getId());
-            }
-            
-            parameters.put("name", name);
-            
-            resultList = service.getStates(serverUri + "/search", parameters);
-        }
-        
-    }
-
     public String save()
     {
         String result = null;
         
         try
         {
-            selectedRow.setCountryDTO(selectedCountry);
+            selectedRow.setStateDTO(selectedState);
             
             result = service.execute(serverUri + getServiceSave(), selectedRow);
+            
         }
         catch (Exception e) 
         {
@@ -244,10 +241,9 @@ public class StateController extends BaseController implements Serializable
             if(result != null)
             {
                 summary = MessageUtil.retrieveMessage("action.result.removed");
-                selectedRow = null;
+                
+                return navigationRulez.goCities();
             }
-            
-            search(null);
         }
         
         return null;
@@ -260,20 +256,27 @@ public class StateController extends BaseController implements Serializable
     
     public void add()
     {
-        selectedRow = new StateDTO();
+        selectedRow = new CityDTO();
         selectedRow.setActive(true);
     }
     
     public void updateCollectionsInfo()
     {
-        selectedCountry = CollectionHelper.getCountry(activeCountries, selectedRow.getCountryDTO());
+        selectedState = CollectionHelper.getState(activeStates, selectedRow.getStateDTO());
+        selectedCountry = CollectionHelper.getCountry(activeCountries, selectedState.getCountryDTO());
         selectedContinent = CollectionHelper.getContinent(activeContinents, selectedCountry.getContinentDTO());
         updateCountries();
+        updateStates();
     }
     
     public void updateCountries()
     {
         filteredCountries = CollectionHelper.getCountriesByContinent(activeCountries, selectedContinent);
+    }
+    
+    public void updateStates()
+    {
+        filteredStates = CollectionHelper.getStatesByCountry(activeStates, selectedCountry);
     }
     
     public void activate()
@@ -309,26 +312,7 @@ public class StateController extends BaseController implements Serializable
                 selectedRow = null;
             }
 
-            search(null);
         }
     }
     
-    // TODO implement report 
-    public void print()
-    {
-//        reportController.init();
-//        
-//        reportController.setReportPath("/reports");
-//        reportController.setReportTemplateName("States");
-//
-//        reportController.setReportName("States");
-//        reportController.addDataSourceEntityCollection(resultList);
-//        
-//        reportController.addParameter("name" , name);
-//        
-//        reportController.print();
-//        
-    }
-    
-
 }
