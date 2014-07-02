@@ -151,6 +151,9 @@
                                        action="#{countryController.remove}" >
                                 <f:setPropertyActionListener value="#{_country}"
                                                             target="#{countryController.selectedRow}" />
+                                <p:confirm header="#{bundle['label.confirm']}" 
+                                          message="#{bundle['label.confirm.delete']}"
+                                             icon="ui-icon-alert"/>
                             </p:commandLink>
 
                         </p:column>

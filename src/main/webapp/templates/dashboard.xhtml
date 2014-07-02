@@ -19,8 +19,15 @@
     <h:body>
     
         <p:growl id="messages" autoUpdate="true" />
-              
-        <!-- head -->
+
+        <p:confirmDialog global="true" id="confirmDlgGlobal">
+            <p:commandButton type="button" value="#{bundle['label.yes']}" 
+                             icon="ui-icon-check" styleClass="ui-confirmdialog-yes" />
+            <p:commandButton type="button" value="#{bundle['label.no']}"  
+                             icon="ui-icon-close" styleClass="ui-confirmdialog-no" />
+        </p:confirmDialog>
+
+    <!-- head -->
         <div id="head" style="width: 90%; height: 40px; padding-left: 15px;">
             <!-- TODO implement login -->
             <div style="font-size: xx-large;" >
