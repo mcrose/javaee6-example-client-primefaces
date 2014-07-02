@@ -30,11 +30,11 @@ import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
-import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
-import py.org.icarusdb.example.rest.client.CountryClientService;
+import py.org.icarusdb.example.model.StateDTO;
+import py.org.icarusdb.example.rest.client.StateClientService;
 import py.org.icarusdb.example.util.CollectionHelper;
-import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
+import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
 import py.org.icarusdb.util.AppHelper;
 import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
@@ -48,25 +48,25 @@ import py.org.icarusdb.util.MessageUtil;
 @ManagedBean
 @ViewScoped
 //TODO add roles
-public class CountryController extends BaseController implements Serializable
+public class StateController extends BaseController implements Serializable
 {
     //TODO implement logging
-//    private static final Logger LOGGER = Logger.getLogger(CountryController.class);
+//    private static final Logger LOGGER = Logger.getLogger(StateController.class);
     
     
 //    @Inject 
 //    private ContextHelper contextHelper;
     
     @Inject
-    @ComboBoxActiveContinents
-    List<ContinentDTO> activeContinents;
+    @ComboBoxActiveCountries
+    List<CountryDTO> activeCountries;
     
 
-    private CountryClientService service = null;
+    private StateClientService service = null;
 
-    private List<CountryDTO> resultList = null;
-    private CountryDTO selectedRow = null;
-    private ContinentDTO selectedContinent = null;
+    private List<StateDTO> resultList = null;
+    private StateDTO selectedRow = null;
+    private CountryDTO selectedCountry = null;
     
     private String name = null;
 
@@ -80,7 +80,7 @@ public class CountryController extends BaseController implements Serializable
     {
         // TODO add navigation control
 
-        service = new CountryClientService();
+        service = new StateClientService();
         try
         {
             service.loadConfig();
@@ -93,38 +93,38 @@ public class CountryController extends BaseController implements Serializable
         
         initVarz();
         
-        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameCountries");
-        resultList = service.getCountries(serverUri);
+        serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameStates");
+        resultList = service.getStates(serverUri);
     }
     
     private void initVarz()
     {
         resultList = null;
-        selectedRow = new CountryDTO();
-        selectedContinent = null;
+        selectedRow = new StateDTO();
+        selectedCountry = null;
         
         summary = null; 
         name = null;
     }
     
-    public CountryDTO getSelectedRow()
+    public StateDTO getSelectedRow()
     {
         return selectedRow ;
     }
 
-    public void setSelectedRow(CountryDTO selectedRow)
+    public void setSelectedRow(StateDTO selectedRow)
     {
         this.selectedRow = selectedRow;
     }
     
-    public ContinentDTO getSelectedContinent()
+    public CountryDTO getSelectedCountry()
     {
-        return selectedContinent;
+        return selectedCountry;
     }
     
-    public void setSelectedContinent(ContinentDTO selectedContinent)
+    public void setSelectedCountry(CountryDTO selectedCountry)
     {
-        this.selectedContinent = selectedContinent;
+        this.selectedCountry = selectedCountry;
     }
 
     public String getName()
@@ -137,7 +137,7 @@ public class CountryController extends BaseController implements Serializable
         this.name = name;
     }
     
-    public List<CountryDTO> getResultList()
+    public List<StateDTO> getResultList()
     {
         return resultList;
     }
@@ -180,17 +180,17 @@ public class CountryController extends BaseController implements Serializable
     
     public void search(ActionEvent actionEvent)
     {
-        if(selectedContinent == null && (name == null || name.isEmpty()))  
+        if(selectedCountry == null && (name == null || name.isEmpty()))  
         {
-            resultList = service.getCountries(serverUri);
+            resultList = service.getStates(serverUri);
         }
         else
         {
             Properties parameters = new IDBProperties();
             parameters.put("name", name);
-            parameters.put("continent", selectedContinent.getId());
+            parameters.put("country", selectedCountry.getId());
             
-            resultList = service.getCountries(serverUri + "/search", parameters);
+            resultList = service.getStates(serverUri + "/search", parameters);
         }
         
     }
@@ -201,7 +201,7 @@ public class CountryController extends BaseController implements Serializable
         
         try
         {
-            selectedRow.setContinentDTO(selectedContinent);
+            selectedRow.setCountryDTO(selectedCountry);
             
             result = service.execute(serverUri + getServiceSave(), selectedRow);
         }
@@ -231,13 +231,13 @@ public class CountryController extends BaseController implements Serializable
     
     public void add()
     {
-        selectedRow = new CountryDTO();
+        selectedRow = new StateDTO();
         selectedRow.setActive(true);
     }
     
-    public void updateContinentInfo()
+    public void updateCountryInfo()
     {
-        selectedContinent = CollectionHelper.getContinent(activeContinents, selectedRow.getContinentDTO());
+        selectedCountry = CollectionHelper.getCountry(activeCountries, selectedRow.getCountryDTO());
     }
     
 //    public void onCellEdit(CellEditor editor)
@@ -247,15 +247,15 @@ public class CountryController extends BaseController implements Serializable
     
 //    public void onRowEdit(RowEditEvent event)
 //    {
-//        selectedRow = (CountryDTO) event.getObject();
-//        selectedRow.setContinentDTO(selectedContinent);
+//        selectedRow = (StateDTO) event.getObject();
+//        selectedRow.setCountryDTO(selectedCountry);
 //        save();
 //    }
     
 //    public void onRowCancel(RowEditEvent event)
 //    {
 //        showActivationButtons = true;
-//        selectedRow = (CountryDTO) event.getObject();
+//        selectedRow = (StateDTO) event.getObject();
 //        
 //        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
 //        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
@@ -305,9 +305,9 @@ public class CountryController extends BaseController implements Serializable
 //        reportController.init();
 //        
 //        reportController.setReportPath("/reports");
-//        reportController.setReportTemplateName("Countries");
+//        reportController.setReportTemplateName("States");
 //
-//        reportController.setReportName("Countries");
+//        reportController.setReportName("States");
 //        reportController.addDataSourceEntityCollection(resultList);
 //        
 //        reportController.addParameter("name" , name);

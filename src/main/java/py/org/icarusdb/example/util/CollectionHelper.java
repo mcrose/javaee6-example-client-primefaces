@@ -21,6 +21,7 @@ package py.org.icarusdb.example.util;
 import java.util.List;
 
 import py.org.icarusdb.example.model.ContinentDTO;
+import py.org.icarusdb.example.model.CountryDTO;
 
 /**
  * @author Betto McRose [icarus]
@@ -31,6 +32,8 @@ import py.org.icarusdb.example.model.ContinentDTO;
 public class CollectionHelper
 {
 
+    // FIXME implement EntityInterface (will work for DTOs too) !!
+    
     public static ContinentDTO getContinent(List<ContinentDTO> activeContinents, ContinentDTO continentDTO)
     {
         if (continentDTO == null) return null;
@@ -38,6 +41,20 @@ public class CollectionHelper
         for(ContinentDTO dto : activeContinents)
         {
             if (continentDTO.getId().longValue() == dto.getId().longValue())
+            {
+                return dto;
+            }
+        }
+        return null;
+    }
+
+    public static CountryDTO getCountry(List<CountryDTO> activeCountries, CountryDTO countryDTO)
+    {
+        if (countryDTO == null) return null;
+        
+        for(CountryDTO dto : activeCountries)
+        {
+            if (countryDTO.getId().longValue() == dto.getId().longValue())
             {
                 return dto;
             }

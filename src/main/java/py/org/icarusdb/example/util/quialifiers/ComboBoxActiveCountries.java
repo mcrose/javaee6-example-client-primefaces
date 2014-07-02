@@ -16,13 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.icarusdb.session;
+package py.org.icarusdb.example.util.quialifiers;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 
-import py.org.icarusdb.util.NavigationRulez;
-import py.org.icarusdb.util.NavigationRulezHelper;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
  * @author Betto McRose [icarus]
@@ -30,25 +35,9 @@ import py.org.icarusdb.util.NavigationRulezHelper;
  *         mcrose.dev@gmail.com
  *
  */
-@Named(value="navigationRulez")
-@RequestScoped
-public class DemoNavigationRulez extends NavigationRulez
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ TYPE, METHOD, FIELD, PARAMETER })
+@Qualifier
+public @interface ComboBoxActiveCountries
 {
-    
-    public String goContinents()
-    {
-        return "/admin/continents.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
-    }
-    
-    public String goCountries()
-    {
-        return "/admin/countries.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
-    }
-    
-    public String goStates()
-    {
-        return "/admin/states.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
-    }
-    
-    
 }

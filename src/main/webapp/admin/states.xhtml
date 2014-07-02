@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/templates/dashboard.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="content" > 
+        
+            <h:form id="listform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px;" 
+                     header="#{bundle['label.countries']}">
+                         
+                    <p:focus />
+                    <h:panelGrid id="datapanelg" columns="2" >
+                        
+                        <h:outputLabel for="name" style="width: 115px; "
+                                     value="#{bundle['label.country']}" />
+                        <p:selectOneMenu id="contienent"  
+                                      value="#{stateController.selectedCountry}">
+                             <f:selectItem itemLabel="Select One" itemValue="" />
+                             <f:selectItems var="_activeCountry" value="#{comboBoxActiveCountries}"  
+                                      itemValue="#{_activeCountry}"
+                                      itemLabel="#{_activeCountry.name}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="name" style="width: 115px; "
+                                     value="#{bundle['label.state.name']}" />
+                        <p:inputText id="name" size="40"  
+                                  value="#{stateController.name}" />
+                        
+                        <div style="clear: left;"/>
+                        <p:spacer height="10px" />
+                        
+                        <div align="right" >
+                            <h:panelGroup >
+                                <p:commandButton id="clearbutton" icon="ui-icon-close" 
+                                             update=":listform"
+                                              value="#{bundle['button.label.clear']}" 
+                                     actionListener="#{stateController.clear}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="searchbutton" icon="ui-icon-search" 
+                                             update="collectionpanel printbutton" 
+                                              value="#{bundle['search.label.lookup']}" 
+                                     actionListener="#{stateController.search}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="printbutton" icon="ui-icon-print" 
+                                             update=":listform:processbutton" ajax="false"
+                                           disabled="#{not stateController.printable}"
+                                              value="#{bundle['button.label.print']}" 
+                                     actionListener="#{stateController.print}" />
+                                <p:spacer width="10px"/>
+                                    <p:commandButton id="add" value="#{bundle['label.add']}"
+                                                 update=":state-edit-form:display" 
+                                             oncomplete="PF('editionPanelDialog').show()"
+                                         actionListener="#{stateController.add}" />
+                            </h:panelGroup>
+                        </div>
+                    </h:panelGrid>
+                    
+                </p:panel>
+                <br />
+                <p:panel id="collectionpanel" style="min-height: 50px; " 
+                     header="#{bundle['label.countries']}" toggleable="true">
+                     
+                    <p:dataTable id="datatablecollection" 
+                                var="_state" rowIndexVar="_indexVar"
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="200"
+                           rendered="#{not empty stateController.resultList}"
+                              value="#{stateController.resultList}" 
+                       emptyMessage="#{bundle['search.label.noRecordsFound']}">
+                        
+<!--                             <p:ajax event="rowEdit" update=":messages" -->
+<!--                                  listener="#{stateController.onRowEdit}"  /> -->
+<!--                             <p:ajax event="rowEditCancel" update=":messages"  -->
+<!--                                  listener="#{stateController.onRowCancel}" /> -->
+                         
+<!--                        <p:column headerText="#{bundle['label.name']}" > -->
+<!--                            <p:cellEditor> -->
+<!--                                 <f:facet name="output"> -->
+<!--                                     <h:outputText value="#{_state.name}" /> -->
+<!--                                 </f:facet> -->
+<!--                                 <f:facet name="input"> -->
+<!--                                     <p:inputText id="nameInput" value="#{_state.name}" style="width:100%"/> -->
+<!--                                 </f:facet> -->
+<!--                            </p:cellEditor> -->
+<!--                         </p:column> -->
+
+                       <p:column width="200"
+                                 headerText="#{bundle['label.name']}" > 
+                            <h:outputText value="#{_state.name}" />
+                        </p:column>
+
+                       <p:column width="200"
+                                 headerText="#{bundle['label.country']}" > 
+                            <h:outputText value="#{_state.countryDTO.name}" />
+                        </p:column>
+
+                        <p:column width="70"   
+                             headerText="#{bundle['label.isActive']}">
+                            <div align="center">
+                                <p:selectBooleanCheckbox disabled="true" 
+                                             value="#{_state.active}" />
+                            </div>
+                        </p:column>
+ 
+                        <p:column width="150" 
+                             headerText="#{bundle['label.actions']}">
+                        
+                            <p:commandLink id="viewlink"  
+                                       update=":state-edit-form:display" 
+                                   oncomplete="PF('editionPanelDialog').show()"
+                                        value="#{bundle['label.view']}"
+                                       action="#{stateController.updateCountryInfo}" >
+                                <f:setPropertyActionListener value="#{_state}"
+                                                            target="#{stateController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            <p:commandLink id="activatelink" immediate="true" 
+                                     disabled="#{_state.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['button.label.activate']}"
+                                       action="#{stateController.activate}" >
+                                <f:setPropertyActionListener value="#{_state}"
+                                                            target="#{stateController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            
+                            <p:commandLink id="inactivatelink" immediate="true"
+                                     disabled="#{not _state.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['button.label.inactivate']}"
+                                       action="#{stateController.inactivate}" >
+                                <f:setPropertyActionListener value="#{_state}"
+                                                            target="#{stateController.selectedRow}" />
+                            </p:commandLink>
+                            <p:spacer width="10" />
+
+                            <p:commandLink id="removelink" immediate="true"
+                                     disabled="#{not _state.active}" update=":listform:collectionpanel"
+                                        value="#{bundle['label.remove']}"
+                                       action="#{stateController.remove}" >
+                                <f:setPropertyActionListener value="#{_state}"
+                                                            target="#{stateController.selectedRow}" />
+                                <p:confirm header="#{bundle['label.confirm']}" 
+                                          message="#{bundle['label.confirm.delete']}"
+                                             icon="ui-icon-alert"/>
+                            </p:commandLink>
+
+                        </p:column>
+                                                    
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+            </h:form>
+
+            <p:dialog id="editionPanelDlg" widgetVar="editionPanelDialog"
+                  header="#{bundle['label.edit']}: #{bundle['label.state']}" 
+                   modal="true" resizable="false" 
+              showEffect="fade" hideEffect="explode" 
+                minWidth="800" minHeight="500" >
+                
+                <h:form id="state-edit-form">
+                    <p:panel id="display">
+                        <h:panelGrid columns="2">
+
+                            <h:outputLabel for="name" 
+                                         value="#{bundle['label.country']}" />
+                            <p:selectOneMenu id="contienent"  
+                                          value="#{stateController.selectedCountry}">
+                                 <f:selectItem itemLabel="Select One" itemValue="" />
+                                 <f:selectItems var="_activeCountry" value="#{comboBoxActiveCountries}"  
+                                          itemValue="#{_activeCountry}"
+                                          itemLabel="#{_activeCountry.name}" />
+                                 <f:ajax event="change" immediate="true" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="name" 
+                                         value="#{bundle['label.state.name']}" />
+                            <p:inputText id="name" size="40"  
+                                      value="#{stateController.selectedRow.name}" />
+                        
+                            <h:outputLabel for="isActive"
+                                         value="#{bundle['label.isActive']}" />
+                            <p:selectBooleanCheckbox id="isActive" 
+                                         value="#{stateController.selectedRow.active}" />
+                        
+                        </h:panelGrid>
+                        
+                        <p:spacer height="10px" />
+                        <div id="action-buttons" align="center">
+                        
+                            <p:commandButton id="cancellbutton" 
+                                          value="#{bundle['button.label.cancel']}" 
+                                        onclick="PF('editionPanelDialog').hide()" />
+                            <p:spacer width="10" />
+
+                            <p:commandButton id="savebutton" 
+                                          value="#{bundle['button.label.save']}" 
+                                         action="#{stateController.save}"
+                                     oncomplete="PF('editionPanelDialog').hide()"
+                                         update=":listform:collectionpanel" />
+                        </div>                        
+                                            
+                    </p:panel>
+                </h:form>
+                
+            </p:dialog>
+                        
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>

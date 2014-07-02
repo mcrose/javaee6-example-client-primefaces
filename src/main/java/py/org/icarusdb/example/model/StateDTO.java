@@ -25,14 +25,13 @@ package py.org.icarusdb.example.model;
  *         mcrose.dev@gmail.com
  *
  */
-public class CountryDTO
+public class StateDTO 
 {
-    
     private Long id;
-    private ContinentDTO continentDTO;
+    private CountryDTO countryDTO;
     private String name;
     private Boolean active;
-//    private Set<State> states = new HashSet<State>(0);
+//    private Set<City> cities = new HashSet<City>(0);
 
     public Long getId()
     {
@@ -44,14 +43,14 @@ public class CountryDTO
         this.id = id;
     }
 
-    public ContinentDTO getContinentDTO()
+    public CountryDTO getCountryDTO()
     {
-        return this.continentDTO;
+        return this.countryDTO;
     }
 
-    public void setContinentDTO(ContinentDTO continent)
+    public void setCountryDTO(CountryDTO state)
     {
-        this.continentDTO = continent;
+        this.countryDTO = state;
     }
 
     public String getName()
@@ -74,14 +73,14 @@ public class CountryDTO
         this.active = active;
     }
 
-//    public Set<State> getStates()
+//    public Set<City> getCities()
 //    {
-//        return this.states;
+//        return this.cities;
 //    }
 //
-//    public void setStates(Set<State> stateses)
+//    public void setCities(Set<City> citieses)
 //    {
-//        this.states = stateses;
+//        this.cities = citieses;
 //    }
 
 }
