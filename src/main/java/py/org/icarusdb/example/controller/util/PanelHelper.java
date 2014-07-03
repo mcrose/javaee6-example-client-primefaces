@@ -16,9 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.icarusdb.util;
+package py.org.icarusdb.example.controller.util;
 
-import java.io.Serializable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
+
 
 /**
  * @author Betto McRose [icarus]
@@ -26,29 +28,41 @@ import java.io.Serializable;
  *         mcrose.dev@gmail.com
  *
  */
-public abstract class BaseController implements Serializable
+public abstract class PanelHelper 
 {
+    public abstract void search();
+    public abstract void clear();
+    public abstract boolean isSelected();
+    public abstract void handleClose(CloseEvent event);
+//    public abstract List<EntityInterface> getResultList(); // FIXME implement!
+    
+
+    
     /**
-     * 
+     * example: :searchform:supplier or :editform:supplier
      */
-    private static final long serialVersionUID = -3167847061881759865L;
+    protected String tagId2update = null;
     
-    protected String actionSubTitle = null;
-    protected String action = null;
+    protected String clientId = null;
 
-
-    protected String serverUri = null; 
-    protected String summary = null;
-
-    
-    public String getActionSubTitle()
+    public String getTagId2update()
     {
-        return actionSubTitle;
-    }
-
-    public boolean isView()
-    {
-        return (action != null && action.contains("view"));
+        return tagId2update;
     }
     
+    public void setTagId2update(String tagId2update)
+    {
+        this.tagId2update = tagId2update;
+    }
+    
+    
+    public void processUpdateClientId()
+    {
+        if(clientId != null)
+        {
+            RequestContext.getCurrentInstance().update(clientId);
+        }
+    }
+
+
 }

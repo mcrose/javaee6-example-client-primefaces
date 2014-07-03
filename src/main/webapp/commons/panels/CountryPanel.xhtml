@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+        
+    <p:dialog id="countryDlg" widgetVar="countryDialog"
+          header="#{bundle['search.label.searching']} #{bundle['label.countries']}" 
+           modal="true"  resizable="false" position="top"
+      showEffect="fade" hideEffect="#{dialogEffectHelper.bounceEffect}" 
+        minWidth="350" minHeight="500" onHide="alert('Hidden')">
+        
+        <p:ajax event="close" update="#{countryPanel.tagId2update}"  
+             listener="#{countryPanel.handleClose}" />
+        
+        <h:form id="countrypanelform">
+        
+            <p:panel id="display">
+            
+                <p:panel id="countrypanelsearch" header="#{bundle['search.label.lookup']}" >
+                    <h:panelGrid columns="3">
+                        <h:outputLabel for="name" value="#{bundle['label.name']}" />
+                        <p:inputText id="name" size="20" 
+                                  value="#{countryPanel.name}" />
+                                  
+                        <p:commandButton id="search" update="panelcollection" 
+                                      value="#{bundle['search.label.lookup']}"
+                                      action="#{countryPanel.search}"/>
+                    </h:panelGrid>
+                </p:panel>
+                
+                <p:spacer id="sp1" height="10"/>
+                <p:panel id="panelcollection" header="...">
+                
+                    <p:dataTable id="countrypanelcollection" 
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="250" 
+                              value="#{countryPanel.resultList}" var="_country"
+                           rendered="#{not empty countryPanel.resultList}">
+                    
+                        <p:column width="200"
+                             headerText="#{bundle['label.name']}" >
+                            <h:outputText value="#{_country.name}" />
+                        </p:column>
+                        
+                        <p:column width="50"
+                             headerText="#{bundle['label.actions']}" >
+                        
+                            <p:commandLink id="selectlinklist" immediate="true" 
+                                        value="#{bundle['button.label.select']}" 
+                                   oncomplete="PF('countryDialog').hide()"
+                                       update="#{countryPanel.tagId2update}"> 
+                                <f:setPropertyActionListener value="#{country}"
+                                                            target="#{countryPanel.selectedEntity}" />
+                            </p:commandLink>
+                            
+                        </p:column>                    
+                    
+                    </p:dataTable>
+                
+                </p:panel>
+                
+            </p:panel>
+        </h:form>
+    </p:dialog>        
+</ui:composition>

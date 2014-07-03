@@ -27,6 +27,8 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.controller.panel.CountryPanel;
+import py.org.icarusdb.example.controller.util.BaseController;
 import py.org.icarusdb.example.model.CityDTO;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
@@ -37,10 +39,9 @@ import py.org.icarusdb.example.util.SessionParameters;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveStates;
-import py.org.icarusdb.session.ContextHelper;
+import py.org.icarusdb.session.SessionContextHelper;
 import py.org.icarusdb.session.DemoNavigationRulez;
 import py.org.icarusdb.util.AppHelper;
-import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 import py.org.icarusdb.util.NavigationRulezHelper;
 
@@ -74,7 +75,13 @@ public class CityEditController extends BaseController implements Serializable
     DemoNavigationRulez navigationRulez;
 
     @Inject 
-    ContextHelper contextHelper;
+    SessionContextHelper sessionContextHelper;
+    
+    @Inject
+    CountryPanel countryPanel;
+    
+    
+    
     
     private CityClientService service = null;
 
@@ -95,7 +102,7 @@ public class CityEditController extends BaseController implements Serializable
     @PostConstruct
     public void init()
     {
-        if(!contextHelper.containsMenuAction(SessionParameters.ACTION_MENU_CITY))
+        if(!sessionContextHelper.containsMenuAction(SessionParameters.ACTION_MENU_CITY))
         {
             MessageUtil.addFacesMessageError("error.action.noActionDefined");
             NavigationRulezHelper.redirect(AppHelper.getDomainUrl() + "/home.jsf");
@@ -117,7 +124,7 @@ public class CityEditController extends BaseController implements Serializable
         
         serverUri = UriBuilder.buildUri(service.getConnInfo(), "serviceNameCities");
         
-        action = contextHelper.getSelectedAction();
+        action = sessionContextHelper.getSelectedAction();
         if(action.equalsIgnoreCase(SessionParameters.ACTION_NEW_CITY)) 
         {
             selectedRow = new CityDTO();
@@ -125,7 +132,7 @@ public class CityEditController extends BaseController implements Serializable
         }
         else
         {
-            Serializable entityId = (Serializable) contextHelper.getSelectedEntityId();
+            Serializable entityId = (Serializable) sessionContextHelper.getSelectedEntityId();
             selectedRow = service.getCity(serverUri, entityId);
             actionSubTitle = AppHelper.getBundleMessage("label.update");
             
@@ -133,7 +140,7 @@ public class CityEditController extends BaseController implements Serializable
             
         }
         
-        //contextHelper.clearAction(); TODO uncomment when finish debug
+        //sessionContextHelper.clearAction(); TODO uncomment when finish debug
 
     }
     
@@ -148,6 +155,8 @@ public class CityEditController extends BaseController implements Serializable
         
         summary = null; 
         name = null;
+        
+        countryPanel.clear();
     }
     
     public CityDTO getSelectedRow()
@@ -314,5 +323,14 @@ public class CityEditController extends BaseController implements Serializable
 
         }
     }
+
+    public void preparePanel(String panelname)
+    {
+        if("country".equalsIgnoreCase(panelname)) {
+            countryPanel.setTagId2update(":editform");
+            countryPanel.clear();
+        }
+    }
+    
     
 }

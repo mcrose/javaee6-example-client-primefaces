@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.controller.util.BaseController;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.model.StateDTO;
@@ -38,7 +39,6 @@ import py.org.icarusdb.example.util.CollectionHelper;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
 import py.org.icarusdb.util.AppHelper;
-import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 
 /**

@@ -20,6 +20,7 @@ package py.org.icarusdb.example.repository;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -104,14 +105,25 @@ public class CountryListProducer
         retrieveAllCountriesOrderedByName();
     }
 
-    public void retrieveAllCountriesOrderedByName()
+    private void retrieveAllCountriesOrderedByName()
     {
         countries = service.getCountries(serverUri);        
     }
     
-    public void retrieveAcTiveCountriesOrderedByName()
+    private void retrieveAcTiveCountriesOrderedByName()
     {
         activeCountries = service.getCountries(serverUri + "/actives");        
     }
-    
+
+
+
+    public List<CountryDTO> search(String path, Properties parameters)
+    {
+        String fullpath = path;
+        if(!fullpath.startsWith(serverUri)) {
+            fullpath = serverUri + path;
+        }
+        return service.getCountries(fullpath, parameters);
+    }
+
 }

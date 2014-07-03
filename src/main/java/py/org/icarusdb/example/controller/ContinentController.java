@@ -34,10 +34,10 @@ import org.primefaces.event.RowEditEvent;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.controller.util.BaseController;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.rest.client.ContinentClientService;
 import py.org.icarusdb.util.AppHelper;
-import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 
 /**
@@ -55,7 +55,7 @@ public class ContinentController extends BaseController implements Serializable
     
     
 //    @Inject 
-//    private ContextHelper contextHelper;
+//    private SessionContextHelper sessionContextHelper;
     
 
     private ContinentClientService service = null;

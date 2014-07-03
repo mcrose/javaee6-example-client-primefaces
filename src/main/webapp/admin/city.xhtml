@@ -13,7 +13,7 @@
         
         <ui:define name="content" > 
         
-            <h:form id="listform" styleClass="contentWidth" >
+            <h:form id="editform" styleClass="contentWidth" >
             
                 <!-- data panel -->
                 <p:panel id="datapanel" style="min-height: 100px;" 
@@ -135,7 +135,7 @@
                             <p:spacer width="10" />
 
                             <p:commandLink id="activatelink" immediate="true" 
-                                     disabled="#{_city.active}" update=":listform:collectionpanel"
+                                     disabled="#{_city.active}" update=":editform:collectionpanel"
                                         value="#{bundle['button.label.activate']}"
                                        action="#{cityEditController.activate}" >
                                 <f:setPropertyActionListener value="#{_city}"
@@ -145,7 +145,7 @@
 
                             
                             <p:commandLink id="inactivatelink" immediate="true"
-                                     disabled="#{not _city.active}" update=":listform:collectionpanel"
+                                     disabled="#{not _city.active}" update=":editform:collectionpanel"
                                         value="#{bundle['button.label.inactivate']}"
                                        action="#{cityEditController.inactivate}" >
                                 <f:setPropertyActionListener value="#{_city}"
@@ -154,7 +154,7 @@
                             <p:spacer width="10" />
 
                             <p:commandLink id="removelink" immediate="true"
-                                     disabled="#{not _city.active}" update=":listform:collectionpanel"
+                                     disabled="#{not _city.active}" update=":editform:collectionpanel"
                                         value="#{bundle['label.remove']}"
                                        action="#{cityEditController.remove}" >
                                 <f:setPropertyActionListener value="#{_city}"

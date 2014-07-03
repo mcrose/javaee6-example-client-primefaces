@@ -31,12 +31,12 @@ import javax.inject.Named;
  */
 @Named
 @SessionScoped
-public class ContextHelper implements Serializable
+public class SessionContextHelper implements Serializable
 {
     /**
      * 
      */
-    private static final long serialVersionUID = 1744702171402523184L;
+    private static final long serialVersionUID = 7480044731167958520L;
     
     private String selectedMenu = null;
     private String selectedAction = null;
