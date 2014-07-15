@@ -13,7 +13,8 @@
         
         
         <ui:define name="content" > 
-        <ui:include src="/commons/panels/CountryPanel.xhtml" />
+        
+            <ui:include src="/commons/panels/CountryPanel.xhtml" />
         
             
             <h:form id="editform" styleClass="contentWidth" >
@@ -30,7 +31,7 @@
                         <h:panelGroup id="country-grouping">
                             <p:outputPanel autoUpdate="true">
                                 <p:inputText id="country" readonly="true" disabled="true" size="20" required="true"
-                                          requiredMessage="#{bundle['error.required.value']} #{bundle['label.country']}"
+                                requiredMessage="#{bundle['error.required.value']} #{bundle['label.country']}"
                                           value="#{countryPanel.selectedEntity.name}"/>
                                 <p:spacer width="2px"/>
                                 <p:commandButton id="searchbutton_country" icon="ui-icon-search"  

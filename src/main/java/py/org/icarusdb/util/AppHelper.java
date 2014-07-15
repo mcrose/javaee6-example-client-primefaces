@@ -28,6 +28,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.RollbackException;
 
 import py.org.icarusdb.commons.util.AppBaseHelper;
@@ -140,6 +141,13 @@ public class AppHelper extends AppBaseHelper
         return getServletRequest().getRemoteAddr();
     }
 
+    public static String getSessionId()
+    {
+        HttpSession session = (HttpSession) getExternalContext().getSession(false);
+        return session.getId();
+    }
+
+    
 //    public static String getRESTfullConfig(String cfgFileName) throws FileNotFoundException, IOException
 //    {
 //        return UriBuilder.buildLoginUri(FileHelper.loadConfigParams(cfgFileName, SessionParameters.JBOSS7_JBOSSSERVER_EXAMPLE_SERVER_CONN_CONFIG_DIR));
