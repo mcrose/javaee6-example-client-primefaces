@@ -82,9 +82,13 @@
                                               value="#{bundle['button.label.print']}" 
                                      actionListener="#{cityController.print}" />
                                 <p:spacer width="10px"/>
-                                    <p:commandButton id="add" value="#{bundle['label.add']}"
-                                         actionListener="#{cityController.selectAction(actionNewCity)}"
-                                                 action="#{navigationRulez.goCityEdit}" />
+                                <p:commandButton id="add-v1" value="#{bundle['label.add']} v1"
+                                     actionListener="#{cityController.selectAction(actionNewCity)}"
+                                             action="#{navigationRulez.goCityEdit('v1')}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="add-v2" value="#{bundle['label.add']} v2"
+                                     actionListener="#{cityController.selectAction(actionNewCity)}"
+                                             action="#{navigationRulez.goCityEdit('V2')}" />
                             </h:panelGroup>
                         </div>
                     </h:panelGrid>

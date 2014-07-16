@@ -30,13 +30,13 @@ import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.controller.util.BaseController;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
 import py.org.icarusdb.example.rest.client.CountryClientService;
 import py.org.icarusdb.example.util.CollectionHelper;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.util.AppHelper;
-import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 
 /**
@@ -55,11 +55,12 @@ public class CountryController extends BaseController implements Serializable
     
     
 //    @Inject 
-//    private ContextHelper contextHelper;
+//    private SessionContextHelper sessionContextHelper;
     
     @Inject
     @ComboBoxActiveContinents
     List<ContinentDTO> activeContinents;
+    
     
 
     private CountryClientService service = null;
@@ -105,6 +106,7 @@ public class CountryController extends BaseController implements Serializable
         
         summary = null; 
         name = null;
+        
     }
     
     public CountryDTO getSelectedRow()
@@ -257,7 +259,7 @@ public class CountryController extends BaseController implements Serializable
 //        showActivationButtons = true;
 //        selectedRow = (CountryDTO) event.getObject();
 //        
-//        String message = AppHelper.getBundleMessage("action.result.cancelledEdition");
+//        String message = DialogEffectHelper.getBundleMessage("action.result.cancelledEdition");
 //        MessageUtil.addFacesMessageWarm(message, selectedRow.getName());
 //    }
 
@@ -297,6 +299,7 @@ public class CountryController extends BaseController implements Serializable
             search(null);
         }
     }
+
     
     // TODO implement report 
     public void print()

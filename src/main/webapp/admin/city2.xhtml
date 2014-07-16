@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/templates/dashboard.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        
+        <ui:define name="content" > 
+        <ui:include src="/commons/panels/CountryPanel.xhtml" />
+        
+            
+            <h:form id="editform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px;" 
+                     header="#{bundle['label.city']} :: #{cityEditController.actionSubTitle}">
+                         
+                    <p:focus />
+                    <h:panelGrid id="datapanelg" columns="2" >
+
+                        <h:outputLabel for="country" style="width: 70px; "
+                                     value="#{bundle['label.country']}" />
+                        <h:panelGroup id="country-grouping">
+                            <p:outputPanel autoUpdate="true">
+                                <p:inputText id="country" readonly="true" disabled="true" size="20" required="true"
+                                          requiredMessage="#{bundle['error.required.value']} #{bundle['label.country']}"
+                                          value="#{countryPanel.selectedEntity.name}"/>
+                                <p:spacer width="2px"/>
+                                <p:commandButton id="searchbutton_country" icon="ui-icon-search"  
+                                             update=":countrypanelform:display"
+                                            process="searchbutton_country"
+                                             action="#{cityEditController.preparePanel('country')}"
+                                         oncomplete="PF('countryDialog').show()" /> 
+                            </p:outputPanel>
+                        </h:panelGroup>
+                        
+                        <h:outputLabel for="state" style="width: 70px; "
+                                     value="#{bundle['label.state']}" />
+                        <p:selectOneMenu id="state"  
+                                      value="#{cityEditController.selectedState}">
+                             <f:selectItem itemLabel="#{bundle['label.selection.select']}" itemValue="" />
+                             <f:selectItems var="_activeState" value="#{cityEditController.filteredStates}"  
+                                      itemValue="#{_activeState}"
+                                      itemLabel="#{_activeState.name}" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="name" style="width: 70px; " 
+                                     value="#{bundle['label.city.name']}" />
+                        <p:inputText id="name" size="35"  
+                                  value="#{cityEditController.selectedRow.name}" />
+                    
+                        <h:outputLabel for="isActive" style="width: 70px; "
+                                     value="#{bundle['label.isActive']}" />
+                        <p:selectBooleanCheckbox id="isActive" 
+                                     value="#{cityEditController.selectedRow.active}" />
+                    
+                    </h:panelGrid>
+                    
+                    <p:spacer height="10px" />
+                    <div id="action-buttons" align="center">
+                    
+                        <p:commandButton id="cancellbutton" 
+                                      value="#{bundle['button.label.cancel']}" 
+                                     action="#{navigationRulez.goCities}" />
+                        <p:spacer width="10" />
+
+                        <p:commandButton id="savebutton" 
+                                      value="#{bundle['button.label.save']}" 
+                                     action="#{cityEditController.save}" />
+                    </div>                        
+                                            
+                </p:panel>
+                <br />
+                
+            </h:form>
+
+        </ui:define>
+
+            
+        
+    </ui:composition>
+    
+</html>

@@ -97,7 +97,7 @@ public class ContinentListProducer
     {
         List<ContinentDTO> combobox = new LinkedList<ContinentDTO>();
 //        ContinentDTO selectElement = new ContinentDTO();
-//        selectElement.setName(AppHelper.getBundleMessage("label.selection.select"));
+//        selectElement.setName(DialogEffectHelper.getBundleMessage("label.selection.select"));
 //        combobox.add(selectElement);
         combobox.addAll(getActiveContinents());
         

@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import py.org.icarusdb.commons.util.IDBProperties;
 import py.org.icarusdb.commons.util.UriBuilder;
+import py.org.icarusdb.example.controller.util.BaseController;
 import py.org.icarusdb.example.model.CityDTO;
 import py.org.icarusdb.example.model.ContinentDTO;
 import py.org.icarusdb.example.model.CountryDTO;
@@ -40,9 +41,8 @@ import py.org.icarusdb.example.util.SessionParameters;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveContinents;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveCountries;
 import py.org.icarusdb.example.util.quialifiers.ComboBoxActiveStates;
-import py.org.icarusdb.session.ContextHelper;
+import py.org.icarusdb.session.SessionContextHelper;
 import py.org.icarusdb.util.AppHelper;
-import py.org.icarusdb.util.BaseController;
 import py.org.icarusdb.util.MessageUtil;
 
 /**
@@ -72,7 +72,7 @@ public class CityController extends BaseController implements Serializable
     List<StateDTO> activeStates;
     
     @Inject 
-    ContextHelper contextHelper;
+    SessionContextHelper sessionContextHelper;
     
 
     
@@ -136,9 +136,9 @@ public class CityController extends BaseController implements Serializable
     
     public void selectAction(String action, Integer id)
     {
-        contextHelper.setSelectedMenu(SessionParameters.ACTION_MENU_CITY);
-        contextHelper.setSelectedAction(action);
-        contextHelper.setSelectedEntityId(id);
+        sessionContextHelper.setSelectedMenu(SessionParameters.ACTION_MENU_CITY);
+        sessionContextHelper.setSelectedAction(action);
+        sessionContextHelper.setSelectedEntityId(id);
     }
     
     

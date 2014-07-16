@@ -55,9 +55,15 @@ public class DemoNavigationRulez extends NavigationRulez
         return "/admin/cities.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
     }
     
-    public String goCityEdit()
+    public String goCityEdit(String version)
     {
-        return "/admin/city.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
+        if("v1".equals(version)) {
+            return "/admin/city.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
+        }
+        else if ("v2".equalsIgnoreCase(version)) {
+            return "/admin/city2.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
+        }
+        return null;
     }
     
     

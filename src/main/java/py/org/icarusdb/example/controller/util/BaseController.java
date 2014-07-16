@@ -16,12 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package py.org.icarusdb.util;
+package py.org.icarusdb.example.controller.util;
 
-import javax.faces.bean.RequestScoped;
-import javax.inject.Named;
-
-import org.primefaces.context.RequestContext;
+import java.io.Serializable;
 
 /**
  * @author Betto McRose [icarus]
@@ -29,14 +26,29 @@ import org.primefaces.context.RequestContext;
  *         mcrose.dev@gmail.com
  *
  */
-@Named
-@RequestScoped
-public class AppContextHelper
+public abstract class BaseController implements Serializable
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6926252853009751615L;
+    
+    protected String actionSubTitle = null;
+    protected String action = null;
 
-    public void openDialog(String dlgName)
+
+    protected String serverUri = null; 
+    protected String summary = null;
+
+    
+    public String getActionSubTitle()
     {
-        RequestContext.getCurrentInstance().openDialog(dlgName);
+        return actionSubTitle;
+    }
+
+    public boolean isView()
+    {
+        return (action != null && action.contains("view"));
     }
     
 }
