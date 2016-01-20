@@ -50,7 +50,7 @@ public class Credentials extends BaseCredentials implements Serializable
         username = null;
         password = null;
         parameters = new Properties();
-        rols = new LinkedList<String>();
+        roles = new LinkedList<String>();
     }
 
     public String getIpAddr()
@@ -100,12 +100,12 @@ public class Credentials extends BaseCredentials implements Serializable
 
     public void addRole(String rol)
     {
-        rols.add(rol);
+        roles.add(rol);
     }
     
     public boolean hasRol(String rol)
     {
-        return rols.contains(rol);
+        return roles.contains(rol);
     }
 
 }
